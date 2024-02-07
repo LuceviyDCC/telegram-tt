@@ -2,7 +2,8 @@
   "extends": [
     "teact-app",
     "airbnb",
-    "airbnb-typescript"
+    "airbnb-typescript",
+    "prettier"
   ],
   "plugins": [
     "no-async-without-await",

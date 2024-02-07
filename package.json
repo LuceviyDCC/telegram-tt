@@ -94,6 +94,7 @@
     "eslint": "^8.55.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-config-prettier": "^9.1.0",
     "eslint-config-teact-app": "git+https://github.com/zubiden/eslint-config-teact-app#5968833968eb48fb799bab941af7f9c3ebb1a005",
     "eslint-import-resolver-webpack": "^0.13.8",
     "eslint-plugin-eslint-multitab-tt": "file:dev/eslint-multitab",
