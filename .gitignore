@@ -8,5 +8,6 @@ tests/
 *.iml
 dev/perf/screenshot*
 .DS_store
+dist
 .github/workflows/*
 !.github/workflows/package-and-publish.yml
