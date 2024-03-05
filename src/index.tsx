@@ -58,8 +58,12 @@ async function init() {
     });
   }
 
+  alert('start');
+
   if (IS_IOS && IS_PWA) {
+    alert('pwa start');
     await initSessionFromCacheStorage();
+    alert('pwa end');
   }
 
   getActions().initShared();

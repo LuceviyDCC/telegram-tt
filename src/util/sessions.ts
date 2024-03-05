@@ -163,6 +163,8 @@ function checkSessionLocked() {
 export async function initSessionFromCacheStorage() {
   const isSupportCache = await cacheApi.isCacheApiSupported();
 
+  window.alert(`cache supported ${isSupportCache}`);
+
   if (!isSupportCache) {
     return;
   }
