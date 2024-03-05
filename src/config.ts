@@ -43,6 +43,7 @@ export const GLOBAL_STATE_CACHE_CHAT_LIST_LIMIT = 200;
 export const GLOBAL_STATE_CACHE_CHATS_WITH_MESSAGES_LIMIT = 30;
 export const GLOBAL_STATE_CACHE_CUSTOM_EMOJI_LIMIT = 150;
 
+export const SESSION_USER_AUTH_CACHE_NAME = 'tt-user-auth';
 export const MEDIA_CACHE_DISABLED = false;
 export const MEDIA_CACHE_NAME = 'tt-media';
 export const MEDIA_CACHE_NAME_AVATARS = 'tt-media-avatars';

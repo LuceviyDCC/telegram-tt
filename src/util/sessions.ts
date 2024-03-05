@@ -3,7 +3,7 @@ import * as idb from 'idb-keyval';
 import type { ApiSessionData } from '../api/types';
 
 import {
-  DEBUG, GLOBAL_STATE_CACHE_KEY, LEGACY_SESSION_KEY, SESSION_USER_KEY,
+  DEBUG, GLOBAL_STATE_CACHE_KEY, LEGACY_SESSION_KEY, SESSION_USER_AUTH_CACHE_NAME, SESSION_USER_KEY,
 } from '../config';
 import * as cacheApi from './cacheApi';
 
@@ -46,6 +46,8 @@ export function storeSession(sessionData: ApiSessionData, currentUserId?: string
       localStorage.setItem(`dc${dcId}_hash`, JSON.stringify(hashes[dcId]));
     });
   }
+
+  saveSeesionToCacheStorage(sessionData, currentUserId);
 }
 
 export function clearStoredSession() {
@@ -156,4 +158,51 @@ function checkSessionLocked() {
   const stateFromCache = JSON.parse(localStorage.getItem(GLOBAL_STATE_CACHE_KEY) || '{}');
 
   return Boolean(stateFromCache?.passcode?.isScreenLocked);
+}
+
+export async function initSessionFromCacheStorage() {
+  const isSupportCache = await cacheApi.isCacheApiSupported();
+
+  if (!isSupportCache) {
+    return;
+  }
+
+  await initStorageFromCache(SESSION_USER_KEY);
+  await initStorageFromCache('dc');
+
+  await Promise.all(DC_IDS.map(async (dcId) => {
+    await initStorageFromCache(`dc${dcId}_auth_key`);
+    await initStorageFromCache(`dc${dcId}_hash`);
+  }));
+}
+
+async function initStorageFromCache(key: string) {
+  const data = await cacheApi.fetch(SESSION_USER_AUTH_CACHE_NAME, key, cacheApi.Type.Text);
+
+  if (data) {
+    localStorage.setItem(key, data);
+  }
+}
+
+async function saveSeesionToCacheStorage (sessionData: ApiSessionData, currentUserId?: string) {
+  const isSupportCache = await cacheApi.isCacheApiSupported();
+
+  if (!isSupportCache) {
+    return;
+  }
+
+  const { mainDcId, keys, hashes } = sessionData;
+
+  cacheApi.save(SESSION_USER_AUTH_CACHE_NAME, SESSION_USER_KEY, JSON.stringify({ dcID: mainDcId, id: currentUserId }));
+  cacheApi.save(SESSION_USER_AUTH_CACHE_NAME, 'dc', String(mainDcId));
+
+  Object.keys(keys).map(Number).forEach((dcId) => {
+    cacheApi.save(SESSION_USER_AUTH_CACHE_NAME, `dc${dcId}_auth_key`, JSON.stringify(keys[dcId]));
+  });
+
+  if (hashes) {
+    Object.keys(hashes).map(Number).forEach((dcId) => {
+      cacheApi.save(SESSION_USER_AUTH_CACHE_NAME, `dc${dcId}_hash`, JSON.stringify(hashes[dcId]));
+    });
+  }
 }
