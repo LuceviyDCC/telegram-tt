@@ -15,7 +15,7 @@ import preloadFonts from '../../util/fonts';
 import { pick } from '../../util/iteratees';
 import { setLanguage } from '../../util/langProvider';
 import { formatPhoneNumber, getCountryCodesByIso, getCountryFromPhoneNumber } from '../../util/phoneNumber';
-import { IS_SAFARI, IS_TOUCH_ENV } from '../../util/windowEnvironment';
+import { IS_IOS, IS_PWA, IS_SAFARI, IS_TOUCH_ENV } from '../../util/windowEnvironment';
 import { getSuggestedLanguage } from './helpers/getSuggestedLanguage';
 
 import useFlag from '../../hooks/useFlag';
@@ -215,7 +215,7 @@ const AuthPhoneNumber: FC<StateProps> = ({
     <div id="auth-phone-number-form" className="custom-scroll">
       <div className="auth-form">
         <div id="logo" />
-        <h1>AiGram</h1>
+        <h1>AiGram {IS_IOS ? 'ios' : ''} { IS_PWA ? 'pwa' : ''}</h1>
         <p className="note">{lang('StartText')}</p>
         <form className="form" action="" onSubmit={handleSubmit}>
           <CountryCodeInput
