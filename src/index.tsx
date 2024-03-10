@@ -18,9 +18,8 @@ import { establishMultitabRole, subscribeToMasterChange } from './util/establish
 import { requestGlobal, subscribeToMultitabBroadcastChannel } from './util/multitab';
 import { checkAndAssignPermanentWebVersion } from './util/permanentWebVersion';
 import { onBeforeUnload } from './util/schedulers';
-import { initSessionFromCacheStorage } from './util/sessions';
 import updateWebmanifest from './util/updateWebmanifest';
-import { IS_IOS, IS_MULTITAB_SUPPORTED, IS_PWA } from './util/windowEnvironment';
+import { IS_MULTITAB_SUPPORTED } from './util/windowEnvironment';
 
 import App from './components/App';
 
@@ -58,13 +57,9 @@ async function init() {
     });
   }
 
-  alert('start');
-
-  if (IS_IOS && IS_PWA) {
-    alert('pwa start');
-    await initSessionFromCacheStorage();
-    alert('pwa end');
-  }
+  // if (IS_IOS && IS_PWA) {
+  //   await initSessionFromCacheStorage();
+  // }
 
   getActions().initShared();
   getActions().init();

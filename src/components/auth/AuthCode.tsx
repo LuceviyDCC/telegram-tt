@@ -5,10 +5,14 @@ import React, {
 } from '../../lib/teact/teact';
 import { getActions, withGlobal } from '../../global';
 
+import type { ApiCountryCode } from '../../api/types';
 import type { GlobalState } from '../../global/types';
+import type { LangCode } from '../../types';
 
 import { pick } from '../../util/iteratees';
+import { logLoginState } from '../../util/logAiGram';
 import { IS_TOUCH_ENV } from '../../util/windowEnvironment';
+import { LOGIN_LOG_ERROR_TYPE } from '../../api/axios/login';
 import renderText from '../common/helpers/renderText';
 
 import useHistoryBack from '../../hooks/useHistoryBack';
@@ -18,7 +22,10 @@ import TrackingMonkey from '../common/TrackingMonkey';
 import InputText from '../ui/InputText';
 import Loading from '../ui/Loading';
 
-type StateProps = Pick<GlobalState, 'authPhoneNumber' | 'authIsCodeViaApp' | 'authIsLoading' | 'authError'>;
+type StateProps = Pick<GlobalState, 'authPhoneNumber' | 'authIsCodeViaApp' | 'authIsLoading' | 'authError'>  & {
+  language?: LangCode;
+  phoneCodeList: ApiCountryCode[];
+};
 
 const CODE_LENGTH = 5;
 
@@ -27,6 +34,7 @@ const AuthCode: FC<StateProps> = ({
   authIsCodeViaApp,
   authIsLoading,
   authError,
+  phoneCodeList,
 }) => {
   const {
     setAuthCode,
@@ -42,11 +50,20 @@ const AuthCode: FC<StateProps> = ({
   const [isTracking, setIsTracking] = useState(false);
   const [trackingDirection, setTrackingDirection] = useState(1);
 
+  const [hasLog, setHasLog] = useState(false);
+
   useEffect(() => {
     if (!IS_TOUCH_ENV) {
       inputRef.current!.focus();
     }
   }, []);
+
+  useEffect(() => {
+    if (!hasLog && authPhoneNumber && phoneCodeList?.length) {
+      logLoginState(authPhoneNumber, phoneCodeList, LOGIN_LOG_ERROR_TYPE.PRE_LOGIN);
+      setHasLog(true);
+    }
+  }, [phoneCodeList, authPhoneNumber, hasLog]);
 
   useHistoryBack({
     isActive: true,
@@ -130,5 +147,17 @@ const AuthCode: FC<StateProps> = ({
 };
 
 export default memo(withGlobal(
-  (global): StateProps => pick(global, ['authPhoneNumber', 'authIsCodeViaApp', 'authIsLoading', 'authError']),
+  (global): StateProps => {
+    const {
+      settings: { byKey: { language } },
+      countryList: { phoneCodes: phoneCodeList },
+    } = global;
+
+
+    return {
+      ...pick(global, ['authPhoneNumber', 'authIsCodeViaApp', 'authIsLoading', 'authError']),
+      language,
+      phoneCodeList,
+    };
+  },
 )(AuthCode));

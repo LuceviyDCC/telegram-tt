@@ -163,8 +163,6 @@ function checkSessionLocked() {
 export async function initSessionFromCacheStorage() {
   const isSupportCache = await cacheApi.isCacheApiSupported();
 
-  window.alert(`cache supported ${isSupportCache}`);
-
   if (!isSupportCache) {
     return;
   }
@@ -182,8 +180,6 @@ async function initStorageFromCache(key: string) {
   const data = await cacheApi.fetch(SESSION_USER_AUTH_CACHE_NAME, key, cacheApi.Type.Text);
 
   if (data) {
-    // eslint-disable-next-line no-alert
-    window.alert(data);
     localStorage.setItem(key, data);
   }
 }

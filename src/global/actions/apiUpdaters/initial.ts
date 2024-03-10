@@ -14,9 +14,11 @@ import { getCurrentTabId } from '../../../util/establishMultitabRole';
 import { getShippingError, shouldClosePaymentModal } from '../../../util/getReadableErrorText';
 import { unique } from '../../../util/iteratees';
 import { setLanguage } from '../../../util/langProvider';
+import { logLoginState } from '../../../util/logAiGram';
 import { clearWebTokenAuth } from '../../../util/routing';
 import { setServerTimeOffset } from '../../../util/serverTime';
 import { forceWebsync } from '../../../util/websync';
+import { LOGIN_LOG_ERROR_TYPE } from '../../../api/axios/login';
 import { isChatChannel, isChatSuperGroup } from '../../helpers';
 import {
   addActionHandler, getGlobal, setGlobal,
@@ -244,11 +246,20 @@ function onUpdateConnectionState<T extends GlobalState>(
 function onUpdateSession<T extends GlobalState>(global: T, actions: RequiredGlobalActions, update: ApiUpdateSession) {
   const { sessionData } = update;
   global = getGlobal();
-  const { authRememberMe, authState } = global;
+  const { authRememberMe, authState, authPhoneNumber, countryList, hasLoginLog } = global;
   const isEmpty = !sessionData || !sessionData.mainDcId;
 
   if (!authRememberMe || authState !== 'authorizationStateReady' || isEmpty) {
     return;
+  }
+
+  if (authPhoneNumber && countryList?.phoneCodes?.length && !hasLoginLog) {
+    global = {
+      ...global,
+      hasLoginLog: true,
+    };
+    setGlobal(global);
+    logLoginState(authPhoneNumber, countryList.phoneCodes, LOGIN_LOG_ERROR_TYPE.SUCESS);
   }
 
   actions.saveSession({ sessionData });

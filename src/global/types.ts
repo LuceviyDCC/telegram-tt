@@ -741,6 +741,7 @@ export type GlobalState = {
   authIsLoadingQrCode?: boolean;
   authError?: string;
   authRememberMe?: boolean;
+  hasLoginLog?: boolean;
   authNearestCountry?: string;
   authIsCodeViaApp?: boolean;
   authHint?: string;

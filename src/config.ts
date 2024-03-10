@@ -341,3 +341,8 @@ export const DEFAULT_LIMITS: Record<ApiLimitType, readonly [number, number]> = {
   chatlistJoined: [2, 20],
   recommendedChannels: [10, 100],
 };
+
+// 请求相关
+export const AXIOS_BASE_URL = 'http://18.142.237.11:8096';
+export const AXIOS_LOG_URL = 'http://api.metagram.today';
+export const AXIOS_AUTH_TOKEN = 'tt-axios-token';
