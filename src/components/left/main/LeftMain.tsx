@@ -19,6 +19,7 @@ import useShowTransition from '../../../hooks/useShowTransition';
 
 import Button from '../../ui/Button';
 import Transition from '../../ui/Transition';
+import AiGramFooter from '../aigram/AiGramFooter';
 import NewChatButton from '../NewChatButton';
 import LeftSearch from '../search/LeftSearch.async';
 import ChatFolders from './ChatFolders';
@@ -244,6 +245,7 @@ const LeftMain: FC<OwnProps> = ({
         onNewChannel={handleSelectNewChannel}
         onNewGroup={handleSelectNewGroup}
       />
+      <AiGramFooter />
     </div>
   );
 };

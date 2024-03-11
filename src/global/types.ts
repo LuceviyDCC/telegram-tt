@@ -91,6 +91,7 @@ import type {
   IThemeSettings,
   LangCode,
   LoadMoreDirection,
+  MainTabStatus,
   ManagementProgress,
   ManagementScreens,
   ManagementState,
@@ -733,6 +734,9 @@ export type GlobalState = {
     isLoading?: boolean;
   };
 
+  // aigram
+  mainTabStatus?: MainTabStatus;
+
   // TODO Move to `auth`.
   isLoggingOut?: boolean;
   authState?: ApiUpdateAuthorizationStateType;
@@ -1030,6 +1034,9 @@ export interface ActionPayloads {
     tabId?: number;
   };
   goToAuthQrCode: undefined;
+
+  // aigram
+  changeMainTabStatus: { newTab: MainTabStatus };
 
   // stickers & GIFs
   setStickerSearchQuery: { query?: string } & WithTabId;

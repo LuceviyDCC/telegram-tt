@@ -22,6 +22,7 @@ import { useStateRef } from '../../hooks/useStateRef';
 import useSyncEffect from '../../hooks/useSyncEffect';
 
 import Transition from '../ui/Transition';
+import AigramTask from './aigram/AiGramTask';
 import ArchivedChats from './ArchivedChats.async';
 import LeftMain from './main/LeftMain';
 import NewChat from './newChat/NewChat.async';
@@ -61,6 +62,7 @@ enum ContentType {
   NewGroup,
   // eslint-disable-next-line no-shadow
   NewChannel,
+  AiGram
 }
 
 const RENDER_COUNT = Object.keys(ContentType).length / 2;
@@ -505,6 +507,10 @@ function LeftColumn({
             onContentChange={setContent}
             onReset={handleReset}
           />
+        );
+      case ContentType.AiGram:
+        return (
+          <AigramTask />
         );
       default:
         return (

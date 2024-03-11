@@ -261,6 +261,11 @@ export enum LeftColumnContent {
   NewGroupStep2,
 }
 
+export enum MainTabStatus {
+  TeleGram,
+  AiGram,
+}
+
 export enum GlobalSearchContent {
   ChatList,
   Media,

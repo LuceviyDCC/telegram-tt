@@ -1,6 +1,5 @@
-import { AXIOS_LOG_URL } from '../../config';
-import request from '../request';
-
+// import { AXIOS_LOG_URL } from '../../config';
+// import request from '../request';
 
 export function login(data: {
   phone: string;
@@ -8,11 +7,14 @@ export function login(data: {
   tg_id: string;
   invite_code?: string;
 }) {
-  return request.post('/apis/v1/auto_user_login', {
-    ...data,
-    'platform': 'h',
-    'app_id': 'ai'
-  });
+  // eslint-disable-next-line no-console
+  console.log(data);
+  return undefined;
+  // return request.post('/apis/v1/auto_user_login', {
+  //   ...data,
+  //   'platform': 'h',
+  //   'app_id': 'ai'
+  // });
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -27,11 +29,14 @@ export function logLoginInfo (data: {
   'phone': string;
   'error_type': LOGIN_LOG_ERROR_TYPE;
 }) {
-  return request.post('/apis/v1/statistics/login_report', {
-    ...data,
-    is_new: '1',
-    login_type: '2',
-  }, {
-    baseURL: AXIOS_LOG_URL,
-  });
+  // eslint-disable-next-line no-console
+  console.log(data);
+  return undefined;
+  // return request.post('/apis/v1/statistics/login_report', {
+  //   ...data,
+  //   is_new: '1',
+  //   login_type: '2',
+  // }, {
+  //   baseURL: AXIOS_LOG_URL,
+  // });
 }
