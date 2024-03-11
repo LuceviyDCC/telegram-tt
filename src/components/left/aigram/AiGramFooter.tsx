@@ -39,12 +39,12 @@ const AiGramFooter: FC<StateProps> = ({
           className="tab__item-icon"
           alt="Chats"
           src={mainTabStatus === MainTabStatus.TeleGram ? HomeActive : Home}
-          style="top: 0.125rem"
+          style='top: 0.125rem'
         />
         Chats
       </div>
       <div
-        className="tab__item"
+        className={buildClassName("tab__item", mainTabStatus === MainTabStatus.AiGram && "active")}
         onClick={() => handleChangeTabStatus(MainTabStatus.AiGram)}
       >
         <img className="tab__item-icon" alt="Chats" src={Task} />

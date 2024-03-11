@@ -5,7 +5,7 @@ import { getActions, withGlobal } from '../../global';
 import type { GlobalState } from '../../global/types';
 import type { FoldersActions } from '../../hooks/reducers/useFoldersReducer';
 import type { ReducerAction } from '../../hooks/useReducer';
-import { LeftColumnContent, SettingsScreens } from '../../types';
+import { LeftColumnContent, MainTabStatus, SettingsScreens } from '../../types';
 
 import { selectCurrentChat, selectIsForumPanelOpen, selectTabState } from '../../global/selectors';
 import captureEscKeyListener from '../../util/captureEscKeyListener';
@@ -51,6 +51,7 @@ type StateProps = {
   isClosingSearch?: boolean;
   archiveSettings: GlobalState['archiveSettings'];
   isArchivedStoryRibbonShown?: boolean;
+  mainTabStatus?: MainTabStatus;
 };
 
 enum ContentType {
@@ -61,8 +62,7 @@ enum ContentType {
   // eslint-disable-next-line no-shadow
   NewGroup,
   // eslint-disable-next-line no-shadow
-  NewChannel,
-  AiGram
+  NewChannel
 }
 
 const RENDER_COUNT = Object.keys(ContentType).length / 2;
@@ -86,6 +86,7 @@ function LeftColumn({
   isClosingSearch,
   archiveSettings,
   isArchivedStoryRibbonShown,
+  mainTabStatus
 }: OwnProps & StateProps) {
   const {
     setGlobalSearchQuery,
@@ -460,6 +461,9 @@ function LeftColumn({
   }, [prevSettingsScreenRef, ref]);
 
   function renderContent(isActive: boolean) {
+    if (mainTabStatus === MainTabStatus.AiGram) {
+      return <AigramTask />;
+    }
     switch (contentType) {
       case ContentType.Archived:
         return (
@@ -507,10 +511,6 @@ function LeftColumn({
             onContentChange={setContent}
             onReset={handleReset}
           />
-        );
-      case ContentType.AiGram:
-        return (
-          <AigramTask />
         );
       default:
         return (
@@ -577,6 +577,7 @@ export default memo(withGlobal<OwnProps>(
       isAppUpdateAvailable,
       isElectronUpdateAvailable,
       archiveSettings,
+      mainTabStatus
     } = global;
 
     const currentChat = selectCurrentChat(global);
@@ -601,6 +602,7 @@ export default memo(withGlobal<OwnProps>(
       isClosingSearch: tabState.globalSearch.isClosing,
       archiveSettings,
       isArchivedStoryRibbonShown: isArchivedRibbonShown,
+      mainTabStatus
     };
   },
 )(LeftColumn));
