@@ -2,16 +2,17 @@ import { type FC,memo, useEffect,useState } from "../../../lib/teact/teact";
 import React from "../../../lib/teact/teact";
 import { withGlobal } from "../../../global";
 
-import buildClassName from "../../../util/buildClassName";
+import type { TaskItem } from "./AiGramTaskItem";
+
+import { getTaskInfo, getTaskList } from "../../../api/axios/task";
 
 import Button from "../../ui/Button";
+import AiGramDailyItem from './AiGramDailyItem';
 import AiGramFooter from "./AiGramFooter";
+import AiGramTaskItem from "./AiGramTaskItem";
 
 import './AiGramTask.scss';
 
-import CompleteIcon from '../../../assets/aigram/complete.png';
-import TaskGift from '../../../assets/aigram/gift.png';
-import TaskGiftDisabled from '../../../assets/aigram/gift_disabled.png';
 import AIScoreBtnIcon from '../../../assets/aigram/score.png';
 import AITips from '../../../assets/aigram/score_q.png';
 
@@ -24,11 +25,34 @@ const DAILY_NORMAL_LIST: Array<undefined> = [undefined, undefined,undefined,unde
 const AiGramTask: FC<StateProps> = () => {
   const [score, setScore] = useState(0);
   const [hasSigned, setHasSigned] = useState(0);
+  const [taskList, setTaskList] = useState<TaskItem[]>([]);
 
   useEffect(() => {
-    setScore(10023);
+    initTaskInfo();
+    initTaskList();
     setHasSigned(3);
+    setTaskList([
+      {
+        type: 0,
+        title: '绑定 Telegram 账号奖励10-1M AI score',
+        content: ['免费使用会员功能', '训练你的AI并获得更多积分', '完美支持所有Telegram功能'],
+        tips: '123'
+      }
+    ]);
   }, []);
+
+  async function initTaskInfo () {
+    const res = await getTaskInfo();
+
+    setScore(res.total_score);
+  }
+
+  async function initTaskList() {
+    const res = await getTaskList();
+
+    // eslint-disable-next-line no-console
+    console.log(res);
+  }
 
   return (
     <div id="AiGram_Task" className="aigram__task">
@@ -56,71 +80,23 @@ const AiGramTask: FC<StateProps> = () => {
             <div className="daily__table-sublist">
               {
                 DAILY_NORMAL_LIST.map((_, index) => (
-                  <div className="daily__table-item">
-                    {
-                      hasSigned > index && (
-                        <img src={CompleteIcon} className="daily__table-item-complete" alt="completeIcon" />
-                      )
-                    }
-                    <div className="daily__table-item-title">领积分</div>
-                    {
-                      hasSigned < index ? (
-                        <span className="daily__table-item-score">10</span>
-                      ) : (
-                        <img
-                          src={hasSigned === index ? TaskGift : TaskGiftDisabled}
-                          className="daily__table-item-gift"
-                          alt="gift"
-                        />
-                      )
-                    }
-                    <div
-                      className={buildClassName(
-                        "daily__table-item-info",
-                        hasSigned === index && "active",
-                        hasSigned < index && "disabled"
-                      )}
-                    >
-                      {
-                        hasSigned === index ? '今天' : `第${index + 1}天`
-                      }
-                    </div>
-                  </div>
+                  <AiGramDailyItem hasSigned={hasSigned} today={index} />
                 ))
               }
             </div>
             <div className="daily__table-target">
-              <div className="daily__table-item">
-                {
-                  hasSigned > DAILY_NUM - 1 && (
-                    <img src={CompleteIcon} className="daily__table-item-complete" alt="completeIcon" />
-                  )
-                }
-                <div className="daily__table-item-title">领积分</div>
-                {
-                  hasSigned < DAILY_NUM - 1 ? (
-                    <span className="daily__table-item-score">10</span>
-                  ) : (
-                    <img
-                      src={hasSigned === DAILY_NUM - 1 ? TaskGift : TaskGiftDisabled}
-                      className="daily__table-item-gift"
-                      alt="gift"
-                    />
-                  )
-                }
-                <div
-                  className={buildClassName(
-                    "daily__table-item-info",
-                    hasSigned === DAILY_NUM - 1 && "active",
-                    hasSigned < DAILY_NUM - 1 && "disabled"
-                  )}
-                >
-                  {
-                    hasSigned === DAILY_NUM - 1 ? '今天' : `第${DAILY_NUM}天`
-                  }
-                </div>
-              </div>
+              <AiGramDailyItem hasSigned={hasSigned} today={DAILY_NUM - 1} />
             </div>
+          </div>
+        </div>
+        <div className="task__list">
+          {
+            taskList.map(task => (
+              <AiGramTaskItem key={task.type} taskInfo={task} />
+            ))
+          }
+          <div className="more-task">
+            更多奖励即将开始
           </div>
         </div>
       </div>

@@ -1,21 +1,8 @@
 // import { AXIOS_LOG_URL } from '../../config';
-// import request from '../request';
+// import { getGlobal } from "../../global";
 
-export function login(data: {
-  phone: string;
-  tg_name: string;
-  tg_id: string;
-  invite_code?: string;
-}) {
-  // eslint-disable-next-line no-console
-  console.log(data);
-  return undefined;
-  // return request.post('/apis/v1/auto_user_login', {
-  //   ...data,
-  //   'platform': 'h',
-  //   'app_id': 'ai'
-  // });
-}
+// import { selectUser } from "../../global/selectors";
+// import request from '../request';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export enum LOGIN_LOG_ERROR_TYPE {
