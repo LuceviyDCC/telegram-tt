@@ -324,11 +324,11 @@
         }
 
         &::before {
-          left: -1.5625rem;
+          right: calc(100% + 0.625rem);
         }
 
         &::after {
-          right: -1.5625rem;
+          left: calc(100% + 0.625rem)
         }
       }
     }
