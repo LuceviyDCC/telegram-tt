@@ -71,7 +71,7 @@ const AiGramTask: FC<StateProps> = () => {
           </div>
           <Button className="total__score-exchange">
             <img className="total__score-exchange-icon" src={AIScoreBtnIcon} alt="score" />
-            积分兑换
+            <span className="total__score-exchange-txt">积分兑换</span>
           </Button>
         </div>
         <div className="daily__table">
