@@ -51,8 +51,7 @@ export function login() {
     LOGIN_PROMISE = instance.post<any, {
       bearer_token: string;
     }>('/apis/v1/auto_user_login', {
-      // todo:
-      invite_code: 'xxx',
+      invite_code: global.inviteCode,
       platform: 'h',
       app_id: 'ai',
 

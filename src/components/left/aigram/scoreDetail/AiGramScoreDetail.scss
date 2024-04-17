@@ -1,0 +1,54 @@
+.detail__list {
+  .detail__item {
+    height: 4.6875rem;
+    margin-left: 0.625rem;
+    border-bottom: 0.0625rem solid #32384A;
+
+    display: flex;
+    align-items: center;
+
+    &-icon {
+      width: 2.875rem;
+      height: 2.875rem;
+      margin-right: 0.625rem;
+    }
+
+    &-main {
+      flex: 1;
+    }
+
+    &-title, &-date {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    &-title {
+      line-height: 1.5rem;
+      font-weight: 500;
+      font-size: 1rem;
+      color: #FFFFFF;
+      margin-bottom: 0.25rem;
+    }
+
+    &-date {
+      line-height: 1rem;
+      color: #8E8E8E;
+      font-size: 0.875rem;
+    }
+
+    &-add {
+      line-height: 1.5rem;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #3772FF;
+      margin-bottom: 0.25rem;
+    }
+
+    &-total {
+      line-height: 1rem;
+      color: #8E8E8E;
+      font-size: 0.875rem;
+    }
+  }
+}

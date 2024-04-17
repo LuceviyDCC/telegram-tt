@@ -1,6 +1,8 @@
+import type { ChangeEvent } from 'react';
 import type { FC } from '../../lib/teact/teact';
 import React, {
   memo, useCallback, useEffect, useLayoutEffect, useRef,
+  useState,
 } from '../../lib/teact/teact';
 import { getActions, withGlobal } from '../../global';
 
@@ -23,6 +25,7 @@ import useMediaTransition from '../../hooks/useMediaTransition';
 
 import AnimatedIcon from '../common/AnimatedIcon';
 import Button from '../ui/Button';
+import InputText from '../ui/InputText';
 import Loading from '../ui/Loading';
 
 import blankUrl from '../../assets/blank.png';
@@ -52,6 +55,7 @@ const AuthCode: FC<StateProps> = ({
   language,
 }) => {
   const {
+    setInviteCode,
     returnToAuthPhoneNumber,
     setSettingOption,
   } = getActions();
@@ -65,6 +69,8 @@ const AuthCode: FC<StateProps> = ({
   const continueText = useLangString(isConnected ? suggestedLanguage : undefined, 'ContinueOnThisLanguage', true);
   const [isLoading, markIsLoading, unmarkIsLoading] = useFlag();
   const [isQrMounted, markQrMounted, unmarkQrMounted] = useFlag();
+
+  const [inviteCode, setInviteCodeState] = useState('');
 
   const { result: qrCode } = useAsync(async () => {
     const QrCodeStyling = (await ensureQrCodeStyling()).default;
@@ -144,6 +150,11 @@ const AuthCode: FC<StateProps> = ({
     returnToAuthPhoneNumber();
   }, [returnToAuthPhoneNumber]);
 
+  const handleInviteCodeChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setInviteCodeState(e.target.value);
+    setInviteCode({ code: e.target.value });
+  }, []);
+
   const isAuthReady = authState === 'authorizationStateWaitQrCode';
 
   return (
@@ -169,6 +180,15 @@ const AuthCode: FC<StateProps> = ({
             />
           </div>
           {!isQrMounted && <div className="qr-loading"><Loading /></div>}
+        </div>
+        <div style='margin-top: 1rem;'>
+          <InputText
+            id="sign-in-invite-code"
+            label='invite code(if exists)'
+            value={inviteCode}
+            inputMode="text"
+            onChange={handleInviteCodeChange}
+          />
         </div>
         {/* <h1>{lang('Login.QR.Title')}</h1> */}
         <h1>Log in to AiGram by QR Code</h1>

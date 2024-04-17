@@ -1,64 +1,88 @@
-import { type FC,memo, useEffect,useState } from "../../../lib/teact/teact";
+import { type FC,memo, useCallback, useEffect,useState } from "../../../lib/teact/teact";
 import React from "../../../lib/teact/teact";
 import { withGlobal } from "../../../global";
 
 import type { TaskItem } from "./AiGramTaskItem";
+import { LeftColumnContent } from "../../../types";
 
 import { getTaskInfo, getTaskList } from "../../../api/axios/task";
 
 import Button from "../../ui/Button";
 import AiGramDailyItem from './AiGramDailyItem';
 import AiGramFooter from "./AiGramFooter";
-import AiGramTaskItem from "./AiGramTaskItem";
+import AiGramTaskItem, { TaskType } from "./AiGramTaskItem";
 
 import './AiGramTask.scss';
 
 import AIScoreBtnIcon from '../../../assets/aigram/score.png';
 import AITips from '../../../assets/aigram/score_q.png';
 
-interface StateProps {};
+interface OwnProps {
+  onContentChange: (content: LeftColumnContent) => void;
+}
+
+interface StateProps {
+};
 
 const DAILY_NUM = 7;
 
 const DAILY_NORMAL_LIST: Array<undefined> = [undefined, undefined,undefined,undefined,undefined, undefined];
 
-const AiGramTask: FC<StateProps> = () => {
+const AiGramTask: FC<StateProps & OwnProps> = ({ onContentChange }) => {
   const [score, setScore] = useState(0);
   const [hasSigned, setHasSigned] = useState(0);
+  const [todayHasSigned, setTodayHasSigned] = useState(false);
+  const [inviteCode, setInviteCode] = useState('');
   const [taskList, setTaskList] = useState<TaskItem[]>([]);
 
   useEffect(() => {
     initTaskInfo();
     initTaskList();
-    setHasSigned(3);
-    setTaskList([
-      {
-        type: 0,
-        title: '绑定 Telegram 账号奖励10-1M AI score',
-        content: ['免费使用会员功能', '训练你的AI并获得更多积分', '完美支持所有Telegram功能'],
-        tips: '123'
-      }
-    ]);
   }, []);
 
   async function initTaskInfo () {
     const res = await getTaskInfo();
 
     setScore(res.total_score);
+    setInviteCode(res.invite_code);
   }
 
   async function initTaskList() {
     const res = await getTaskList();
 
-    // eslint-disable-next-line no-console
-    console.log(res);
+    const tmpTaskList: TaskItem[] = [];
+
+    (res || []).forEach(task => {
+      if (task.task_info.id === TaskType.DAILY) {
+        setHasSigned(task?.finish_count || 0);
+        setTodayHasSigned(!!task.today_finished);
+      } else {
+        tmpTaskList.push({
+          type: task?.task_info.id,
+          title: task.task_info?.name,
+          content: task.task_info?.description?.split(','),
+          tips: task.task_info?.tip_text,
+        });
+      }
+    });
+
+    setTaskList(tmpTaskList);
   }
+
+  function handleToDetail () {
+    onContentChange(LeftColumnContent.AiGramScoreDetail);
+  }
+
+  const handleCompleteDaily = useCallback(() => {
+    setHasSigned(hasSigned + 1);
+    setTodayHasSigned(true);
+  }, [hasSigned]);
 
   return (
     <div id="AiGram_Task" className="aigram__task">
       <div className="aigram__task-header">
         <div className="aigram__task-header-title">AiGram</div>
-        <div className="aigram__task-header-detail">积分明细</div>
+        <div className="aigram__task-header-detail" onClick={handleToDetail}>Score Details</div>
       </div>
       <div className="aigram__task-main">
         <div className="total__score">
@@ -71,32 +95,42 @@ const AiGramTask: FC<StateProps> = () => {
           </div>
           <Button className="total__score-exchange">
             <img className="total__score-exchange-icon" src={AIScoreBtnIcon} alt="score" />
-            <span className="total__score-exchange-txt">积分兑换</span>
+            <span className="total__score-exchange-txt">Exchange</span>
           </Button>
         </div>
         <div className="daily__table">
-          <div className="daily__table-title">连续签到获取分数</div>
+          <div className="daily__table-title">Sign in continuously to get scores</div>
           <div className="daily__table-list">
             <div className="daily__table-sublist">
               {
                 DAILY_NORMAL_LIST.map((_, index) => (
-                  <AiGramDailyItem hasSigned={hasSigned} today={index} />
+                  <AiGramDailyItem
+                    hasSigned={hasSigned}
+                    todayHasSigned={todayHasSigned}
+                    today={index}
+                    onComplete={handleCompleteDaily}
+                  />
                 ))
               }
             </div>
             <div className="daily__table-target">
-              <AiGramDailyItem hasSigned={hasSigned} today={DAILY_NUM - 1} />
+              <AiGramDailyItem
+                hasSigned={hasSigned}
+                todayHasSigned={todayHasSigned}
+                today={DAILY_NUM - 1}
+                onComplete={handleCompleteDaily}
+              />
             </div>
           </div>
         </div>
         <div className="task__list">
           {
             taskList.map(task => (
-              <AiGramTaskItem key={task.type} taskInfo={task} />
+              <AiGramTaskItem key={task.type} taskInfo={task} inviteCode={inviteCode} />
             ))
           }
           <div className="more-task">
-            更多奖励即将开始
+            More rewards are coming soon...
           </div>
         </div>
       </div>
@@ -105,7 +139,7 @@ const AiGramTask: FC<StateProps> = () => {
   );
 };
 
-export default memo(withGlobal(
+export default memo(withGlobal<OwnProps>(
   (global): StateProps => {
     return {
       authState: global.authState,

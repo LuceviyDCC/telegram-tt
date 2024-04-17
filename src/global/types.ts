@@ -686,6 +686,7 @@ export type GlobalState = {
   isCacheApiSupported?: boolean;
   connectionState?: ApiUpdateConnectionStateType;
   currentUserId?: string;
+  inviteCode?: string;
   isSyncing?: boolean;
   isAppUpdateAvailable?: boolean;
   isElectronUpdateAvailable?: boolean;
@@ -1016,6 +1017,7 @@ export interface ActionPayloads {
 
   // auth
   setAuthPhoneNumber: { phoneNumber: string };
+  setInviteCode: { code: string };
   setAuthCode: { code: string };
   setAuthPassword: { password: string };
   signUp: {

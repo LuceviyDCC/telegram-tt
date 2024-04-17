@@ -23,6 +23,7 @@ import useSyncEffect from '../../hooks/useSyncEffect';
 
 import Transition from '../ui/Transition';
 import AigramTask from './aigram/AiGramTask';
+import AiGramScoreDetailComp from './aigram/scoreDetail/AiGramScoreDetail';
 import ArchivedChats from './ArchivedChats.async';
 import LeftMain from './main/LeftMain';
 import NewChat from './newChat/NewChat.async';
@@ -62,7 +63,8 @@ enum ContentType {
   // eslint-disable-next-line no-shadow
   NewGroup,
   // eslint-disable-next-line no-shadow
-  NewChannel
+  NewChannel,
+  AiGramScoreDetail,
 }
 
 const RENDER_COUNT = Object.keys(ContentType).length / 2;
@@ -123,6 +125,9 @@ function LeftColumn({
     case LeftColumnContent.NewGroupStep1:
     case LeftColumnContent.NewGroupStep2:
       contentType = ContentType.NewGroup;
+      break;
+    case LeftColumnContent.AiGramScoreDetail:
+      contentType = ContentType.AiGramScoreDetail;
       break;
   }
 
@@ -462,7 +467,15 @@ function LeftColumn({
 
   function renderContent(isActive: boolean) {
     if (mainTabStatus === MainTabStatus.AiGram) {
-      return <AigramTask />;
+      if (contentType === ContentType.AiGramScoreDetail) {
+        return (
+          <AiGramScoreDetailComp onContentChange={setContent} />
+        );
+      } else {
+        return (
+          <AigramTask onContentChange={setContent} />
+        );
+      }
     }
     switch (contentType) {
       case ContentType.Archived:

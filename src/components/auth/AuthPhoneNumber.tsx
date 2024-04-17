@@ -57,6 +57,7 @@ const AuthPhoneNumber: FC<StateProps> = ({
   language,
 }) => {
   const {
+    setInviteCode,
     setAuthPhoneNumber,
     setAuthRememberMe,
     loadNearestCountry,
@@ -78,6 +79,8 @@ const AuthPhoneNumber: FC<StateProps> = ({
   const [isTouched, setIsTouched] = useState(false);
   const [lastSelection, setLastSelection] = useState<[number, number] | undefined>();
   const [isLoading, markIsLoading, unmarkIsLoading] = useFlag();
+
+  const [inviteCode, setInviteCodeState] = useState('');
 
   const fullNumber = country ? `+${country.countryCode} ${phoneNumber || ''}` : phoneNumber;
   const canSubmit = fullNumber && fullNumber.replace(/[^\d]+/g, '').length >= MIN_NUMBER_LENGTH;
@@ -189,6 +192,10 @@ const AuthPhoneNumber: FC<StateProps> = ({
     parseFullNumber(shouldFixSafariAutoComplete ? `${country!.countryCode} ${value}` : value);
   }, [authError, clearAuthError, country, fullNumber, parseFullNumber]);
 
+  const handleInviteCodeChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setInviteCodeState(e.target.value);
+  }, []);
+
   const handleKeepSessionChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setAuthRememberMe(e.target.checked);
   }, [setAuthRememberMe]);
@@ -201,6 +208,7 @@ const AuthPhoneNumber: FC<StateProps> = ({
     }
 
     if (canSubmit) {
+      setInviteCode({ code: inviteCode });
       setAuthPhoneNumber({ phoneNumber: fullNumber });
     }
   }
@@ -233,6 +241,13 @@ const AuthPhoneNumber: FC<StateProps> = ({
             inputMode="tel"
             onChange={handlePhoneNumberChange}
             onPaste={IS_SAFARI ? handlePaste : undefined}
+          />
+          <InputText
+            id="sign-in-invite-code"
+            label='invite code(if exists)'
+            value={inviteCode}
+            inputMode="text"
+            onChange={handleInviteCodeChange}
           />
           <Checkbox
             id="sign-in-keep-session"

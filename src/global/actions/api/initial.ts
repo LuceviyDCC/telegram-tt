@@ -77,6 +77,15 @@ addActionHandler('setAuthPhoneNumber', (global, actions, payload): ActionReturnT
   };
 });
 
+addActionHandler('setInviteCode', (global, actions, payload): ActionReturnType => {
+  const { code } = payload!;
+
+  return {
+    ...global,
+    inviteCode: code,
+  };
+});
+
 addActionHandler('setAuthCode', (global, actions, payload): ActionReturnType => {
   const { code } = payload!;
 
