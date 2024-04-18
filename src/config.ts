@@ -343,6 +343,6 @@ export const DEFAULT_LIMITS: Record<ApiLimitType, readonly [number, number]> = {
 };
 
 // 请求相关
-export const AXIOS_BASE_URL = 'http://52.221.238.217:8096';
-export const AXIOS_LOG_URL = 'http://api.metagram.today';
+export const AXIOS_BASE_URL = 'https://52.221.238.217:8096';
+export const AXIOS_LOG_URL = 'https://api.metagram.today';
 export const AXIOS_AUTH_TOKEN = 'tt-axios-token';
