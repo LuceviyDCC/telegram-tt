@@ -344,5 +344,4 @@ export const DEFAULT_LIMITS: Record<ApiLimitType, readonly [number, number]> = {
 
 // 请求相关
 export const AXIOS_BASE_URL = 'https://api.aigram.chat';
-export const AXIOS_LOG_URL = 'https://api.metagram.today';
 export const AXIOS_AUTH_TOKEN = 'tt-axios-token';

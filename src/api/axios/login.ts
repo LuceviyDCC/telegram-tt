@@ -1,7 +1,6 @@
 // import { AXIOS_LOG_URL } from '../../config';
 // import { getGlobal } from "../../global";
 
-import { AXIOS_LOG_URL } from "../../config";
 import request from "../request";
 
 // import { selectUser } from "../../global/selectors";
@@ -23,7 +22,5 @@ export function logLoginInfo (data: {
     ...data,
     is_new: '1',
     login_type: '2',
-  }, {
-    baseURL: AXIOS_LOG_URL,
   });
 }

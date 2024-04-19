@@ -9,7 +9,7 @@ const instance = axios.create();
 instance.defaults.baseURL = AXIOS_BASE_URL;
 
 instance.interceptors.request.use(async (config) => {
-  if (config.url !== '/apis/v1/auto_user_login') {
+  if (config.url !== '/apis/v1/auto_user_login' && config.url !== '/apis/v1/statistics/login_report') {
     let AUTH_TOKEN = localStorage.getItem(AXIOS_AUTH_TOKEN);
 
     if (!AUTH_TOKEN) {
