@@ -266,7 +266,7 @@
 
             font-weight: 500;
             font-size: 1rem;
-            color: var(--color-text);
+            color: #fff;
           }
 
           &-tips {
@@ -284,7 +284,7 @@
 
           font-weight: 400;
           font-size: 0.875rem;
-          color: var(--color-text-secondary);
+          color: #8E8E8E;
 
           &::before {
             content: '・';
@@ -309,7 +309,7 @@
           align-items: center;
           justify-content: center;
 
-          color: var(--color-text-secondary);
+          color: #8E8E8E;
           font-size: 0.75rem;
 
           &.no-content {

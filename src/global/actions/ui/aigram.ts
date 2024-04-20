@@ -12,3 +12,14 @@ addActionHandler('changeMainTabStatus', (global, actions, payload): ActionReturn
     mainTabStatus: newTab
   };
 });
+
+addActionHandler('initAigramTaskList', (global, actions, payload): ActionReturnType => {
+  const {
+    taskList,
+  } = payload!;
+
+  return {
+    ...global,
+    aigramTaskList: taskList
+  };
+});

@@ -1,6 +1,6 @@
 import { type FC,memo, useCallback, useEffect,useState } from "../../../lib/teact/teact";
 import React from "../../../lib/teact/teact";
-import { withGlobal } from "../../../global";
+import { getActions, withGlobal } from "../../../global";
 
 import type { TaskItem } from "./AiGramTaskItem";
 import { LeftColumnContent } from "../../../types";
@@ -22,18 +22,22 @@ interface OwnProps {
 }
 
 interface StateProps {
+  initialTaskList: TaskItem[];
 };
 
 const DAILY_NUM = 7;
 
 const DAILY_NORMAL_LIST: Array<undefined> = [undefined, undefined,undefined,undefined,undefined, undefined];
 
-const AiGramTask: FC<StateProps & OwnProps> = ({ onContentChange }) => {
+const AiGramTask: FC<StateProps & OwnProps> = ({ onContentChange, initialTaskList }) => {
+  const {
+    initAigramTaskList
+  } = getActions();
   const [score, setScore] = useState(0);
   const [hasSigned, setHasSigned] = useState(0);
   const [todayHasSigned, setTodayHasSigned] = useState(false);
   const [inviteCode, setInviteCode] = useState('');
-  const [taskList, setTaskList] = useState<TaskItem[]>([]);
+  const [taskList, setTaskList] = useState<TaskItem[]>(initialTaskList);
 
   useEffect(() => {
     initTaskInfo();
@@ -67,6 +71,7 @@ const AiGramTask: FC<StateProps & OwnProps> = ({ onContentChange }) => {
     });
 
     setTaskList(tmpTaskList);
+    initAigramTaskList({ taskList: tmpTaskList });
   }
 
   function handleToDetail () {
@@ -142,7 +147,7 @@ const AiGramTask: FC<StateProps & OwnProps> = ({ onContentChange }) => {
 export default memo(withGlobal<OwnProps>(
   (global): StateProps => {
     return {
-      authState: global.authState,
+      initialTaskList: global.aigramTaskList || [],
     };
   },
 )(AiGramTask));

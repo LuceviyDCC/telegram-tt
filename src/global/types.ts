@@ -72,6 +72,7 @@ import type {
   ApiWebPage,
   ApiWebSession,
 } from '../api/types';
+import type { TaskItem } from '../components/left/aigram/AiGramTaskItem';
 import type { ApiCredentials } from '../components/payment/PaymentModal';
 import type { FoldersActions } from '../hooks/reducers/useFoldersReducer';
 import type { ReducerAction } from '../hooks/useReducer';
@@ -737,6 +738,7 @@ export type GlobalState = {
 
   // aigram
   mainTabStatus?: MainTabStatus;
+  aigramTaskList?: TaskItem[];
 
   // TODO Move to `auth`.
   isLoggingOut?: boolean;
@@ -1039,6 +1041,7 @@ export interface ActionPayloads {
 
   // aigram
   changeMainTabStatus: { newTab: MainTabStatus };
+  initAigramTaskList: {taskList: TaskItem[]};
 
   // stickers & GIFs
   setStickerSearchQuery: { query?: string } & WithTabId;
