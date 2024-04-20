@@ -7,6 +7,7 @@ import { copyTextToClipboard } from "../../../util/clipboard";
 
 import Button from "../../ui/Button";
 
+import NextIcon from '../../../assets/aigram/next.png';
 import TipsIcon from '../../../assets/aigram/score_q.png';
 import TaskIcon1 from '../../../assets/aigram/task_1.png';
 import TaskIcon2 from '../../../assets/aigram/task_2.png';
@@ -73,11 +74,7 @@ const AiGramTaskItem: FC<OwnProps> = (props) => {
           ))
         }
       </div>
-      <div
-        className={buildClassName("task__item-next", !content.length && "no-content")}
-      >
-        {">"}
-      </div>
+      <img className={buildClassName("task__item-next", !content.length && "no-content")} src={NextIcon} alt="btn"/>
     </Button>
   );
 };

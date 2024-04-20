@@ -272,6 +272,13 @@ export const INITIAL_GLOBAL_STATE: GlobalState = {
     isMinimized: false,
     isHidden: false,
   },
+
+  // aigram
+  aigramTotalScore: 0,
+  aigramHasSigned: 0,
+  aigramTodaySigned: false,
+  aigramTaskList: [],
+  aigramInviteCode: '',
 };
 
 export const INITIAL_TAB_STATE: TabState = {

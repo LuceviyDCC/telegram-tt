@@ -1,5 +1,6 @@
 .aigram__task {
   height: 100%;
+  background-color: #141416;
   display: flex;
   flex-direction: column;
 
@@ -9,6 +10,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    color: #fff;
 
     &-title {
       font-weight: 500;
@@ -235,7 +238,7 @@
         margin-bottom: 0.625rem;
         padding: 0.625rem;
         border-radius: 0.9375rem;
-        border: 0.0625rem solid var(--color-borders);
+        border: 0.0625rem solid #2B2D36;
 
         --color-primary: #17191D;
         --color-primary-shade: #1f2229;
@@ -298,19 +301,10 @@
         &-next {
           width: 1rem;
           height: 1rem;
-          border-radius: 50%;
-          background-color: var(--color-background-secondary-accent);
 
           position: absolute;
           right: 0.625rem;
           bottom: 0.75rem;
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          color: #8E8E8E;
-          font-size: 0.75rem;
 
           &.no-content {
             top: 50%;
@@ -324,7 +318,7 @@
         padding: 0.3125rem 0;
         position: relative;
 
-        color: var(--color-text-secondary);
+        color: #8E8E8E;
         font-size: 0.875rem;
 
         &::before, &::after {
@@ -334,7 +328,7 @@
           transform: translateY(-50%);
           width: 0.9375rem;
           height: 0.0625rem;
-          background-color: var(--color-text-secondary);
+          background-color: #8E8E8E;
         }
 
         &::before {

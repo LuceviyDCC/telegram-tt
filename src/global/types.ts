@@ -739,6 +739,10 @@ export type GlobalState = {
   // aigram
   mainTabStatus?: MainTabStatus;
   aigramTaskList?: TaskItem[];
+  aigramTotalScore: number;
+  aigramHasSigned: number;
+  aigramTodaySigned: boolean;
+  aigramInviteCode: string;
 
   // TODO Move to `auth`.
   isLoggingOut?: boolean;
@@ -1041,7 +1045,10 @@ export interface ActionPayloads {
 
   // aigram
   changeMainTabStatus: { newTab: MainTabStatus };
-  initAigramTaskList: {taskList: TaskItem[]};
+  initAigramTaskList: { taskList: TaskItem[] };
+  updateAigramTotalScore: { score: number };
+  updateAigramInviteCode: { code: string };
+  updateAigramSignedInfo: { hasSigned?: number; todaySigned?: boolean };
 
   // stickers & GIFs
   setStickerSearchQuery: { query?: string } & WithTabId;

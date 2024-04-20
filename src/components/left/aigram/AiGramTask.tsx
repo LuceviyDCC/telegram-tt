@@ -1,4 +1,4 @@
-import { type FC,memo, useCallback, useEffect,useState } from "../../../lib/teact/teact";
+import { type FC,memo, useCallback, useEffect } from "../../../lib/teact/teact";
 import React from "../../../lib/teact/teact";
 import { getActions, withGlobal } from "../../../global";
 
@@ -22,22 +22,36 @@ interface OwnProps {
 }
 
 interface StateProps {
-  initialTaskList: TaskItem[];
+  score: number;
+  hasSigned: number;
+  todayHasSigned: boolean;
+  inviteCode: string;
+  taskList: TaskItem[];
 };
 
 const DAILY_NUM = 7;
 
 const DAILY_NORMAL_LIST: Array<undefined> = [undefined, undefined,undefined,undefined,undefined, undefined];
 
-const AiGramTask: FC<StateProps & OwnProps> = ({ onContentChange, initialTaskList }) => {
+const AiGramTask: FC<StateProps & OwnProps> = ({
+  onContentChange,
+  score,
+  hasSigned,
+  todayHasSigned,
+  inviteCode,
+  taskList
+}) => {
   const {
-    initAigramTaskList
+    initAigramTaskList,
+    updateAigramInviteCode,
+    updateAigramSignedInfo,
+    updateAigramTotalScore,
   } = getActions();
-  const [score, setScore] = useState(0);
-  const [hasSigned, setHasSigned] = useState(0);
-  const [todayHasSigned, setTodayHasSigned] = useState(false);
-  const [inviteCode, setInviteCode] = useState('');
-  const [taskList, setTaskList] = useState<TaskItem[]>(initialTaskList);
+  // const [score, setScore] = useState(0);
+  // const [hasSigned, setHasSigned] = useState(0);
+  // const [todayHasSigned, setTodayHasSigned] = useState(false);
+  // const [inviteCode, setInviteCode] = useState('');
+  // const [taskList, setTaskList] = useState<TaskItem[]>(initialTaskList);
 
   useEffect(() => {
     initTaskInfo();
@@ -47,8 +61,8 @@ const AiGramTask: FC<StateProps & OwnProps> = ({ onContentChange, initialTaskLis
   async function initTaskInfo () {
     const res = await getTaskInfo();
 
-    setScore(res.total_score);
-    setInviteCode(res.invite_code);
+    updateAigramTotalScore({score: res.total_score || 0});
+    updateAigramInviteCode({code: res.invite_code || ''});
   }
 
   async function initTaskList() {
@@ -58,8 +72,10 @@ const AiGramTask: FC<StateProps & OwnProps> = ({ onContentChange, initialTaskLis
 
     (res || []).forEach(task => {
       if (task.task_info.id === TaskType.DAILY) {
-        setHasSigned(task?.finish_count || 0);
-        setTodayHasSigned(!!task.today_finished);
+        updateAigramSignedInfo({
+          hasSigned: task?.finish_count || 0,
+          todaySigned: !!task.today_finished
+        });
       } else {
         tmpTaskList.push({
           type: task?.task_info.id,
@@ -70,7 +86,6 @@ const AiGramTask: FC<StateProps & OwnProps> = ({ onContentChange, initialTaskLis
       }
     });
 
-    setTaskList(tmpTaskList);
     initAigramTaskList({ taskList: tmpTaskList });
   }
 
@@ -79,8 +94,11 @@ const AiGramTask: FC<StateProps & OwnProps> = ({ onContentChange, initialTaskLis
   }
 
   const handleCompleteDaily = useCallback(() => {
-    setHasSigned(hasSigned + 1);
-    setTodayHasSigned(true);
+    updateAigramSignedInfo({
+      hasSigned: hasSigned + 1,
+      todaySigned: true
+    });
+    initTaskInfo();
   }, [hasSigned]);
 
   return (
@@ -147,7 +165,11 @@ const AiGramTask: FC<StateProps & OwnProps> = ({ onContentChange, initialTaskLis
 export default memo(withGlobal<OwnProps>(
   (global): StateProps => {
     return {
-      initialTaskList: global.aigramTaskList || [],
+      score: global.aigramTotalScore,
+      hasSigned: global.aigramHasSigned,
+      todayHasSigned: global.aigramTodaySigned,
+      inviteCode: global.aigramInviteCode,
+      taskList: global.aigramTaskList || [],
     };
   },
 )(AiGramTask));
