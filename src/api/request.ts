@@ -68,6 +68,10 @@ export function login() {
   return LOGIN_PROMISE;
 }
 
+export function logoutAigram() {
+  localStorage.removeItem(AXIOS_AUTH_TOKEN);
+}
+
 export default instance;
 
 

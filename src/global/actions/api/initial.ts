@@ -31,6 +31,7 @@ import {
 import {
   callApi, callApiLocal, initApi, setShouldEnableDebugLog,
 } from '../../../api/gramjs';
+import { logoutAigram } from '../../../api/request';
 import { serializeGlobal } from '../../cache';
 import {
   addActionHandler, getGlobal, setGlobal,
@@ -180,6 +181,7 @@ addActionHandler('signOut', async (global, actions, payload): Promise<void> => {
 
   try {
     resetInitialLocationHash();
+    logoutAigram();
     await unsubscribe();
     await callApi('destroy');
     await forceWebsync(false);
