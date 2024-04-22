@@ -31,14 +31,12 @@ export function completeTask(taskId: number) {
 
 export function getScoreDetailList() {
   return request.get<any, Array<{
-    finish_count: number;
-    task_info: {
-      id: number;
-      name: string;
-      description: string;
-      detail_url: string;
-      icon: string;
-      tip_text: string;
-    };
+    created_at: string;
+    current_score: number;
+    id: number;
+    score: number;
+    task_id: number;
+    updated_at: string;
+    user_id: number;
   }>>('/apis/v1/task/get_user_task_log_list');
 }

@@ -8,7 +8,7 @@ import { getScoreDetailList } from '../../../../api/axios/task';
 
 import Button from '../../../ui/Button';
 import Transition from '../../../ui/Transition';
-import { TaskType } from '../AiGramTaskItem';
+import { TaskTitleHash, TaskType } from '../AiGramTaskItem';
 
 import "./AiGramScoreDetail.scss";
 
@@ -43,24 +43,15 @@ const AiGramScoreDetail: FC<OwnProps> = ({ onContentChange }) => {
   }, []);
 
   async function initDetailList () {
-    await getScoreDetailList();
+    const res = await getScoreDetailList();
 
-    setDetailList([
-      {
-        type: TaskType.DAILY,
-        title: '测试测试测试',
-        addScore: 1,
-        nowScore: 102,
-        date: '2024-03-01'
-      },
-      {
-        type: TaskType.FOLLOW,
-        title: '测试测试测试',
-        addScore: 3,
-        nowScore: 103,
-        date: '2024-06-01'
-      }
-    ]);
+    setDetailList(res.map(item => ({
+      type: item.task_id,
+      title: TaskTitleHash[item.task_id as TaskType],
+      addScore: item.score,
+      nowScore: item.current_score,
+      date: item.created_at.split('T')[0],
+    })));
   }
 
   const onBack = useCallback(() => {

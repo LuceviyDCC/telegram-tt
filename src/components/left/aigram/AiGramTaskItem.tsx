@@ -22,9 +22,17 @@ export enum TaskType {
 }
 
 export const TaskIconHash = {
+  [TaskType.DAILY]: TaskIcon1,
   [TaskType.BIND]: TaskIcon1,
   [TaskType.INVITE]: TaskIcon2,
   [TaskType.FOLLOW]: TaskIcon3,
+} as const;
+
+export const TaskTitleHash = {
+  [TaskType.DAILY]: "DAILY SIGN",
+  [TaskType.INVITE]: "INVITE FRIENDS",
+  [TaskType.FOLLOW]: "JOIN AIGRAM GROUPS",
+  [TaskType.BIND]: "BIND TELEGRAM ACCOUNT",
 } as const;
 
 export interface TaskItem {
