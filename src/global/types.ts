@@ -1049,6 +1049,7 @@ export interface ActionPayloads {
   updateAigramTotalScore: { score: number };
   updateAigramInviteCode: { code: string };
   updateAigramSignedInfo: { hasSigned?: number; todaySigned?: boolean };
+  searchAigramChat: { name: string };
 
   // stickers & GIFs
   setStickerSearchQuery: { query?: string } & WithTabId;

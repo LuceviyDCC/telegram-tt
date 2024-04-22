@@ -1,6 +1,9 @@
 import type { ActionReturnType } from '../../types';
 
-import { addActionHandler } from '../../index';
+import { buildCollectionByKey } from '../../../util/iteratees';
+import { callApi } from '../../../api/gramjs';
+import { addActionHandler, getGlobal, setGlobal } from '../../index';
+import { addChats } from '../../reducers';
 
 addActionHandler('changeMainTabStatus', (global, actions, payload): ActionReturnType => {
   const {
@@ -57,4 +60,24 @@ addActionHandler('updateAigramSignedInfo', (global, actions, payload): ActionRet
     aigramHasSigned: typeof hasSigned === 'undefined' ? global.aigramHasSigned : hasSigned,
     aigramTodaySigned: typeof todaySigned === 'undefined' ? global.aigramTodaySigned : todaySigned,
   };
+});
+
+addActionHandler('searchAigramChat', async (global, actions, payload): Promise<void> => {
+  const {
+    name
+  } = payload!;
+
+  const result = await callApi('searchChats', { query: name });
+  const {
+    globalChats = [], accountChats = [],
+  } = result || {};
+  const chats = [...accountChats, ...globalChats];
+
+  global = getGlobal();
+
+  if (chats.length) {
+    global = addChats(global, buildCollectionByKey(chats, 'id'));
+  }
+
+  setGlobal(global);
 });

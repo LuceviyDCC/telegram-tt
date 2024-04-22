@@ -45,14 +45,16 @@ const AiGramTaskItem: FC<OwnProps> = (props) => {
 
   const {
     showNotification,
+    searchAigramChat,
     openChat,
   } = getActions();
 
-  const onTaskClick = useCallback(() => {
+  const onTaskClick = useCallback(async () => {
     if (taskInfo.type === TaskType.INVITE) {
       copyTextToClipboard(inviteCode);
       showNotification({ message: `invite code was copied` });
     } else if (taskInfo.type === TaskType.FOLLOW) {
+      await searchAigramChat({ name: 'aigramLab' });
       openChat({ id: '-1002123962275' });
     }
   }, [taskInfo.type, inviteCode]);
