@@ -53,7 +53,7 @@ const AiGramTaskItem: FC<OwnProps> = (props) => {
       copyTextToClipboard(inviteCode);
       showNotification({ message: `invite code was copied` });
     } else if (taskInfo.type === TaskType.FOLLOW) {
-      openChat({ id: '1002123962275' });
+      openChat({ id: '-1002123962275' });
     }
   }, [taskInfo.type, inviteCode]);
   return (
