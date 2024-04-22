@@ -45,6 +45,7 @@ const AiGramTaskItem: FC<OwnProps> = (props) => {
 
   const {
     showNotification,
+    openChat,
   } = getActions();
 
   const onTaskClick = useCallback(() => {
@@ -52,8 +53,7 @@ const AiGramTaskItem: FC<OwnProps> = (props) => {
       copyTextToClipboard(inviteCode);
       showNotification({ message: `invite code was copied` });
     } else if (taskInfo.type === TaskType.FOLLOW) {
-      // todo: jump to
-      window.location.href = 'https://t.me/AIGramLab';
+      openChat({ id: '1002123962275' });
     }
   }, [taskInfo.type, inviteCode]);
   return (
