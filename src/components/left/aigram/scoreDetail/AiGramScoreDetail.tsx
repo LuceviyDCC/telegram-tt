@@ -13,6 +13,7 @@ import { TaskTitleHash, TaskType } from '../AiGramTaskItem';
 import "./AiGramScoreDetail.scss";
 
 import TaskIcon3 from '../../../../assets/aigram/bind.png';
+import TaskIcon4 from '../../../../assets/aigram/daily.png';
 import TaskIcon1 from '../../../../assets/aigram/follow.png';
 import TaskIcon2 from '../../../../assets/aigram/invite.png';
 
@@ -25,7 +26,7 @@ interface ScoreDetail {
 }
 
 const TaskIconHash = {
-  [TaskType.DAILY]: TaskIcon1,
+  [TaskType.DAILY]: TaskIcon4,
   [TaskType.INVITE]: TaskIcon2,
   [TaskType.FOLLOW]: TaskIcon3,
   [TaskType.BIND]: TaskIcon1,

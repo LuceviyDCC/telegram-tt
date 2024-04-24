@@ -35,6 +35,17 @@ export const TaskTitleHash = {
   [TaskType.BIND]: "BIND TELEGRAM ACCOUNT",
 } as const;
 
+export const TaskDescHash = {
+  [TaskType.DAILY]: [],
+  [TaskType.INVITE]: [
+    "Invite a friend for 2 points",
+    "Invite two friends for 5 points",
+    "Invite three friends for 8 points"
+  ],
+  [TaskType.FOLLOW]: [],
+  [TaskType.BIND]: [],
+} as const;
+
 export interface TaskItem {
   type: TaskType;
   title: string;
@@ -79,7 +90,7 @@ const AiGramTaskItem: FC<OwnProps> = (props) => {
           }
         </div>
         {
-          content.map(str => (
+          TaskDescHash[type].map(str => (
             <div className="task__item-content">{str}</div>
           ))
         }

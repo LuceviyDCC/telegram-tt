@@ -20,6 +20,7 @@ interface OwnProps {
 };
 
 const DAY_LIST = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th'];
+const SCORE_LIST = [1, 1, 1, 1, 1, 1, 5];
 
 const AiGramDailyItem: FC<OwnProps> = (props) => {
   const { hasSigned, today, todayHasSigned, onComplete } = props;
@@ -55,8 +56,8 @@ const AiGramDailyItem: FC<OwnProps> = (props) => {
       }
       <div className="daily__table-item-title">SCORE</div>
       {
-        realDate < today ? (
-          <span className="daily__table-item-score">10</span>
+        realDate > today ? (
+          <span className="daily__table-item-score">{SCORE_LIST[today]}</span>
         ) : (
           <img
             src={realDate === today ? TaskGift : TaskGiftDisabled}
