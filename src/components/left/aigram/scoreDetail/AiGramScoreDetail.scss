@@ -1,4 +1,8 @@
 .detail__list {
+  height: calc(100% - var(--header-height));
+
+  overflow-y: scroll;
+
   .detail__item {
     height: 4.6875rem;
     margin-left: 0.625rem;
