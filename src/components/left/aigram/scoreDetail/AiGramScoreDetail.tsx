@@ -72,7 +72,7 @@ const AiGramScoreDetail: FC<OwnProps> = ({ onContentChange }) => {
           >
             <i className="icon icon-arrow-left" />
           </Button>
-          积分明细
+          Score Details
         </div>
         <div className='detail__list'>{
           detailList.map(detail => (
