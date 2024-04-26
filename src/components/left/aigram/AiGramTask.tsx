@@ -111,7 +111,7 @@ const AiGramTask: FC<StateProps & OwnProps> = ({
         <div className="total__score">
           <div className="total__score-detail">
             <div className="total__score-detail-title">
-              AI Point
+              AI Points
               <img className="total__score-detail-tips" src={AITips} alt="tips" />
             </div>
             <div className="total__score-detail-num">{score}</div>

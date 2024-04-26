@@ -31,16 +31,16 @@ export const TaskIconHash = {
 export const TaskTitleHash = {
   [TaskType.DAILY]: "Daily Sign",
   [TaskType.INVITE]: "Invite friend tasks",
-  [TaskType.FOLLOW]: "Joining the official group earns 5 points",
+  [TaskType.FOLLOW]: "Joining AiGram group earns 5 points.",
   [TaskType.BIND]: "Bind Telegram Account",
 } as const;
 
 export const TaskDescHash = {
   [TaskType.DAILY]: [],
   [TaskType.INVITE]: [
-    "Inviting 1 friend earns 2 point.",
-    "Inviting 2 friend earns 5 point.",
-    "Inviting 3 friend earns 8 point."
+    "Inviting 1 friend earns 2 points.",
+    "Inviting 2 friend earns 5 points.",
+    "Inviting 3 friend earns 8 points."
   ],
   [TaskType.FOLLOW]: [],
   [TaskType.BIND]: [],
@@ -60,7 +60,7 @@ export interface OwnProps {
 
 const AiGramTaskItem: FC<OwnProps> = (props) => {
   const { taskInfo, inviteCode } = props;
-  const { type, title, tips } = taskInfo;
+  const { type, tips } = taskInfo;
 
   const {
     showNotification,
@@ -84,7 +84,7 @@ const AiGramTaskItem: FC<OwnProps> = (props) => {
       }
       <div className="task__item-main">
         <div className="task__item-title">
-          <span className="task__item-title-content">{ title }</span>
+          <span className="task__item-title-content">{ TaskTitleHash[type] }</span>
           {
             tips && <img src={TipsIcon} className="task__item-title-tips" alt="tips" />
           }
