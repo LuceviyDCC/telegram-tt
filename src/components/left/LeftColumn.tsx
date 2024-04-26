@@ -559,6 +559,7 @@ function LeftColumn({
       shouldWrap
       wrapExceptionKey={ContentType.Main}
       id="LeftColumn"
+      className={mainTabStatus === MainTabStatus.AiGram ? 'aigram-bg' : ''}
       withSwipeControl
     >
       {renderContent}

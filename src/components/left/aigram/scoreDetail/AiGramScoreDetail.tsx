@@ -62,8 +62,9 @@ const AiGramScoreDetail: FC<OwnProps> = ({ onContentChange }) => {
   function renderCurrentSection() {
     return (
       <>
-        <div className="left-header">
+        <div className="left-header detail-header">
           <Button
+            className='detail-header-btn'
             round
             size="smaller"
             color="translucent"
@@ -72,7 +73,7 @@ const AiGramScoreDetail: FC<OwnProps> = ({ onContentChange }) => {
           >
             <i className="icon icon-arrow-left" />
           </Button>
-          Score Details
+          Points Details
         </div>
         <div className='detail__list'>{
           detailList.map(detail => (

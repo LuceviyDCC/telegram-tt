@@ -105,13 +105,13 @@ const AiGramTask: FC<StateProps & OwnProps> = ({
     <div id="AiGram_Task" className="aigram__task">
       <div className="aigram__task-header">
         <div className="aigram__task-header-title">AiGram</div>
-        <div className="aigram__task-header-detail" onClick={handleToDetail}>Score Details</div>
+        <div className="aigram__task-header-detail" onClick={handleToDetail}>Points Details</div>
       </div>
       <div className="aigram__task-main">
         <div className="total__score">
           <div className="total__score-detail">
             <div className="total__score-detail-title">
-              AI Score
+              AI Point
               <img className="total__score-detail-tips" src={AITips} alt="tips" />
             </div>
             <div className="total__score-detail-num">{score}</div>
@@ -122,7 +122,7 @@ const AiGramTask: FC<StateProps & OwnProps> = ({
           </Button>
         </div>
         <div className="daily__table">
-          <div className="daily__table-title">Sign in continuously to get scores</div>
+          <div className="daily__table-title">Sign in continuously to get points</div>
           <div className="daily__table-list">
             <div className="daily__table-sublist">
               {

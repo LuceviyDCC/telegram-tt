@@ -29,18 +29,18 @@ export const TaskIconHash = {
 } as const;
 
 export const TaskTitleHash = {
-  [TaskType.DAILY]: "DAILY SIGN",
-  [TaskType.INVITE]: "INVITE FRIENDS",
-  [TaskType.FOLLOW]: "JOIN AIGRAM GROUPS",
-  [TaskType.BIND]: "BIND TELEGRAM ACCOUNT",
+  [TaskType.DAILY]: "Daily Sign",
+  [TaskType.INVITE]: "Invite friend tasks",
+  [TaskType.FOLLOW]: "Joining the official group earns 5 points",
+  [TaskType.BIND]: "Bind Telegram Account",
 } as const;
 
 export const TaskDescHash = {
   [TaskType.DAILY]: [],
   [TaskType.INVITE]: [
-    "Invite a friend for 2 points",
-    "Invite two friends for 5 points",
-    "Invite three friends for 8 points"
+    "Inviting 1 friend earns 2 point.",
+    "Inviting 2 friend earns 5 point.",
+    "Inviting 3 friend earns 8 point."
   ],
   [TaskType.FOLLOW]: [],
   [TaskType.BIND]: [],
@@ -60,7 +60,7 @@ export interface OwnProps {
 
 const AiGramTaskItem: FC<OwnProps> = (props) => {
   const { taskInfo, inviteCode } = props;
-  const { type, title, tips, content } = taskInfo;
+  const { type, title, tips } = taskInfo;
 
   const {
     showNotification,
@@ -95,7 +95,10 @@ const AiGramTaskItem: FC<OwnProps> = (props) => {
           ))
         }
       </div>
-      <img className={buildClassName("task__item-next", !content.length && "no-content")} src={NextIcon} alt="btn"/>
+      <img className={buildClassName(
+        "task__item-next",
+        !TaskDescHash[type].length && "no-content"
+      )} src={NextIcon} alt="btn"/>
     </Button>
   );
 };

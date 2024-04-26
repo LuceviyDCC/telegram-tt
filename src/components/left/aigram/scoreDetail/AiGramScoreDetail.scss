@@ -1,5 +1,19 @@
+.detail-header {
+  justify-content: center;
+  background-color: #141416 !important;
+  position: relative;
+  color: #fff;
+
+  &-btn {
+    position: absolute;
+    left: 0.8125rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
 .detail__list {
   height: calc(100% - var(--header-height));
+  background-color: #141416;
 
   overflow-y: scroll;
 

@@ -1,6 +1,6 @@
 .aigram__task {
   height: 100%;
-  background-color: #141416;
+  background-color: #141416 !important;
   display: flex;
   flex-direction: column;
 
@@ -26,7 +26,7 @@
 
   &-main {
     flex: 1;
-    padding: 0.875rem;
+    padding: 0.625rem;
 
     .total__score {
       height: 5.5rem;
@@ -150,8 +150,14 @@
         align-items: center;
         justify-content: flex-start;
 
+        text-transform: none;
+
         &.today {
           background-image: url('../../../assets/aigram/task_bg_today.png');
+
+          .daily__table-item-score {
+            color: #fff;
+          }
         }
 
         &:active {
@@ -247,6 +253,8 @@
 
         display: flex;
         align-items: center;
+
+        text-transform: none;
 
         &-icon {
           width: 2.875rem;

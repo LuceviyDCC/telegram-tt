@@ -54,7 +54,7 @@ const AiGramDailyItem: FC<OwnProps> = (props) => {
           <img src={CompleteIcon} className="daily__table-item-complete" alt="completeIcon" />
         )
       }
-      <div className="daily__table-item-title">SCORE</div>
+      <div className="daily__table-item-title">Point</div>
       {
         (realDate > today || (realDate === today && todayHasSigned)) ? (
           <span className="daily__table-item-score">{SCORE_LIST[today]}</span>
