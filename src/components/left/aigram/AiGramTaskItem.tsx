@@ -1,6 +1,6 @@
 import type { FC } from "../../../lib/teact/teact";
 import React, {memo, useCallback} from "../../../lib/teact/teact";
-import { getActions } from "../../../global";
+import { getActions, withGlobal } from "../../../global";
 
 import buildClassName from "../../../util/buildClassName";
 import { copyTextToClipboard } from "../../../util/clipboard";
@@ -58,8 +58,12 @@ export interface OwnProps {
   inviteCode: string;
 }
 
-const AiGramTaskItem: FC<OwnProps> = (props) => {
-  const { taskInfo, inviteCode } = props;
+interface StateProps {
+  isInApp: boolean;
+}
+
+const AiGramTaskItem: FC<StateProps & OwnProps> = (props) => {
+  const { taskInfo, inviteCode, isInApp } = props;
   const { type, tips } = taskInfo;
 
   const {
@@ -71,12 +75,19 @@ const AiGramTaskItem: FC<OwnProps> = (props) => {
   const onTaskClick = useCallback(async () => {
     if (taskInfo.type === TaskType.INVITE) {
       copyTextToClipboard(inviteCode);
-      showNotification({ message: `invite code was copied` });
+
+      if (!isInApp) {
+        showNotification({ message: `invite code was copied` });
+      }
     } else if (taskInfo.type === TaskType.FOLLOW) {
-      await searchAigramChat({ name: 'aigramLab' });
-      openChat({ id: '-1002123962275' });
+      if (!isInApp) {
+        await searchAigramChat({ name: 'aigramLab' });
+        openChat({ id: '-1002123962275' });
+      } else {
+        // todo: add app func
+      }
     }
-  }, [taskInfo.type, inviteCode]);
+  }, [taskInfo.type, inviteCode, isInApp]);
   return (
     <Button className="task__item" onClick={onTaskClick}>
       {
@@ -103,4 +114,10 @@ const AiGramTaskItem: FC<OwnProps> = (props) => {
   );
 };
 
-export default memo(AiGramTaskItem);
+export default memo(withGlobal<OwnProps>(
+  (global): StateProps => {
+    return {
+      isInApp: global.aigramIsInApp,
+    };
+  },
+)(AiGramTaskItem));

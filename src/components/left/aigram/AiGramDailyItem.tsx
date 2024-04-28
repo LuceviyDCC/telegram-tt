@@ -1,7 +1,7 @@
 import type { FC } from "../../../lib/teact/teact";
-import React, { useCallback } from "../../../lib/teact/teact";
+import React, { memo, useCallback } from "../../../lib/teact/teact";
+import { getActions, withGlobal } from "../../../global";
 
-// import { getActions } from "../../../global";
 import buildClassName from "../../../util/buildClassName";
 import { completeTask } from "../../../api/axios/task";
 
@@ -19,15 +19,19 @@ interface OwnProps {
   onComplete: () => void;
 };
 
+interface StateProps {
+  isInApp: boolean;
+}
+
 const DAY_LIST = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th'];
 const SCORE_LIST = [1, 1, 1, 1, 1, 1, 5];
 
-const AiGramDailyItem: FC<OwnProps> = (props) => {
-  const { hasSigned, today, todayHasSigned, onComplete } = props;
+const AiGramDailyItem: FC<StateProps & OwnProps> = (props) => {
+  const { hasSigned, today, todayHasSigned, isInApp, onComplete } = props;
 
-  // const {
-  // showNotification,
-  // } = getActions();
+  const {
+    showNotification,
+  } = getActions();
 
   const onClick = useCallback(async () => {
     if (hasSigned !== today || todayHasSigned) {
@@ -38,9 +42,12 @@ const AiGramDailyItem: FC<OwnProps> = (props) => {
 
     if (res.data.success) {
       onComplete();
-      // showNotification({ message: 'Task Completed !'});
+
+      if (!isInApp) {
+        showNotification({ message: 'Task Completed !'});
+      }
     }
-  }, [hasSigned, today, todayHasSigned, onComplete]);
+  }, [hasSigned, today, todayHasSigned, isInApp, onComplete]);
 
   const realDate = todayHasSigned ? hasSigned - 1 : hasSigned;
 
@@ -81,4 +88,10 @@ const AiGramDailyItem: FC<OwnProps> = (props) => {
   );
 };
 
-export default AiGramDailyItem;
+export default memo(withGlobal<OwnProps>(
+  (global): StateProps => {
+    return {
+      isInApp: global.aigramIsInApp,
+    };
+  },
+)(AiGramDailyItem));
