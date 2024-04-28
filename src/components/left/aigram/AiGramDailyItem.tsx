@@ -1,7 +1,7 @@
 import type { FC } from "../../../lib/teact/teact";
 import React, { useCallback } from "../../../lib/teact/teact";
-import { getActions } from "../../../global";
 
+// import { getActions } from "../../../global";
 import buildClassName from "../../../util/buildClassName";
 import { completeTask } from "../../../api/axios/task";
 
@@ -25,9 +25,9 @@ const SCORE_LIST = [1, 1, 1, 1, 1, 1, 5];
 const AiGramDailyItem: FC<OwnProps> = (props) => {
   const { hasSigned, today, todayHasSigned, onComplete } = props;
 
-  const {
-    showNotification,
-  } = getActions();
+  // const {
+  // showNotification,
+  // } = getActions();
 
   const onClick = useCallback(async () => {
     if (hasSigned !== today || todayHasSigned) {
@@ -38,7 +38,7 @@ const AiGramDailyItem: FC<OwnProps> = (props) => {
 
     if (res.data.success) {
       onComplete();
-      showNotification({ message: 'Task Completed !'});
+      // showNotification({ message: 'Task Completed !'});
     }
   }, [hasSigned, today, todayHasSigned, onComplete]);
 
