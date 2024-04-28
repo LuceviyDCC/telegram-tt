@@ -345,3 +345,5 @@ export const DEFAULT_LIMITS: Record<ApiLimitType, readonly [number, number]> = {
 // 请求相关
 export const AXIOS_BASE_URL = 'https://api.aigram.chat';
 export const AXIOS_AUTH_TOKEN = 'tt-axios-token';
+export const IS_AIGRAM_IN_URL = 'aigram_is_app';
+export const AXIOS_TOKEN_KEY_IN_URL = 'aigram_token';

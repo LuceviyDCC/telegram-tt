@@ -1,5 +1,8 @@
+import qs from 'qs';
+
 import type { ActionReturnType } from '../../types';
 
+import { AXIOS_TOKEN_KEY_IN_URL, IS_AIGRAM_IN_URL } from '../../../config';
 import { buildCollectionByKey } from '../../../util/iteratees';
 import { callApi } from '../../../api/gramjs';
 import { addActionHandler, getGlobal, setGlobal } from '../../index';
@@ -13,6 +16,18 @@ addActionHandler('changeMainTabStatus', (global, actions, payload): ActionReturn
   return {
     ...global,
     mainTabStatus: newTab
+  };
+});
+
+addActionHandler('initAigramFromApp', (global): ActionReturnType => {
+  const params = qs.parse(window.location.search.slice(1));
+  const isInApp = params[IS_AIGRAM_IN_URL] === '1';
+  const tokenFromApp = (params[AXIOS_TOKEN_KEY_IN_URL] || '') as string;
+
+  return {
+    ...global,
+    aigramIsInApp: isInApp,
+    aigramTokenFromApp: isInApp ? tokenFromApp : '',
   };
 });
 

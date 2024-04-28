@@ -18,7 +18,7 @@ import AIScoreBtnIcon from '../../../assets/aigram/score.png';
 import AITips from '../../../assets/aigram/score_q.png';
 
 interface OwnProps {
-  onContentChange: (content: LeftColumnContent) => void;
+  onContentChange?: (content: LeftColumnContent) => void;
 }
 
 interface StateProps {
@@ -27,6 +27,7 @@ interface StateProps {
   todayHasSigned: boolean;
   inviteCode: string;
   taskList: TaskItem[];
+  isInApp: boolean;
 };
 
 const DAILY_NUM = 7;
@@ -39,7 +40,8 @@ const AiGramTask: FC<StateProps & OwnProps> = ({
   hasSigned,
   todayHasSigned,
   inviteCode,
-  taskList
+  taskList,
+  isInApp,
 }) => {
   const {
     initAigramTaskList,
@@ -47,11 +49,6 @@ const AiGramTask: FC<StateProps & OwnProps> = ({
     updateAigramSignedInfo,
     updateAigramTotalScore,
   } = getActions();
-  // const [score, setScore] = useState(0);
-  // const [hasSigned, setHasSigned] = useState(0);
-  // const [todayHasSigned, setTodayHasSigned] = useState(false);
-  // const [inviteCode, setInviteCode] = useState('');
-  // const [taskList, setTaskList] = useState<TaskItem[]>(initialTaskList);
 
   useEffect(() => {
     initTaskInfo();
@@ -59,38 +56,50 @@ const AiGramTask: FC<StateProps & OwnProps> = ({
   }, []);
 
   async function initTaskInfo () {
-    const res = await getTaskInfo();
+    try {
+      const res = await getTaskInfo();
 
-    updateAigramTotalScore({score: res.total_score || 0});
-    updateAigramInviteCode({code: res.invite_code || ''});
+      updateAigramTotalScore({score: res.total_score || 0});
+      updateAigramInviteCode({code: res.invite_code || ''});
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
+    }
   }
 
   async function initTaskList() {
-    const res = await getTaskList();
+    try {
+      const res = await getTaskList();
 
-    const tmpTaskList: TaskItem[] = [];
+      const tmpTaskList: TaskItem[] = [];
 
-    (res || []).forEach(task => {
-      if (task.task_info.id === TaskType.DAILY) {
-        updateAigramSignedInfo({
-          hasSigned: task?.finish_count || 0,
-          todaySigned: !!task.today_finished
-        });
-      } else {
-        tmpTaskList.push({
-          type: task?.task_info.id,
-          title: task.task_info?.name,
-          content: task.task_info?.description?.split(','),
-          tips: task.task_info?.tip_text,
-        });
-      }
-    });
+      (res || []).forEach(task => {
+        if (task.task_info.id === TaskType.DAILY) {
+          updateAigramSignedInfo({
+            hasSigned: task?.finish_count || 0,
+            todaySigned: !!task.today_finished
+          });
+        } else {
+          tmpTaskList.push({
+            type: task?.task_info.id,
+            title: task.task_info?.name,
+            content: task.task_info?.description?.split(','),
+            tips: task.task_info?.tip_text,
+          });
+        }
+      });
 
-    initAigramTaskList({ taskList: tmpTaskList });
+      initAigramTaskList({ taskList: tmpTaskList });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log(e);
+    }
   }
 
   function handleToDetail () {
-    onContentChange(LeftColumnContent.AiGramScoreDetail);
+    if (onContentChange) {
+      onContentChange(LeftColumnContent.AiGramScoreDetail);
+    }
   }
 
   const handleCompleteDaily = useCallback(() => {
@@ -157,7 +166,9 @@ const AiGramTask: FC<StateProps & OwnProps> = ({
           </div>
         </div>
       </div>
-      <AiGramFooter />
+      {
+        !isInApp && <AiGramFooter />
+      }
     </div>
   );
 };
@@ -170,6 +181,7 @@ export default memo(withGlobal<OwnProps>(
       todayHasSigned: global.aigramTodaySigned,
       inviteCode: global.aigramInviteCode,
       taskList: global.aigramTaskList || [],
+      isInApp: global.aigramIsInApp,
     };
   },
 )(AiGramTask));

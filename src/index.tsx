@@ -63,6 +63,7 @@ async function init() {
 
   getActions().initShared();
   getActions().init();
+  getActions().initAigramFromApp();
 
   getActions().updateShouldEnableDebugLog();
   getActions().updateShouldDebugExportedSenders();

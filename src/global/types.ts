@@ -738,6 +738,8 @@ export type GlobalState = {
 
   // aigram
   mainTabStatus?: MainTabStatus;
+  aigramIsInApp: boolean;
+  aigramTokenFromApp?: string;
   aigramTaskList?: TaskItem[];
   aigramTotalScore: number;
   aigramHasSigned: number;
@@ -1045,6 +1047,7 @@ export interface ActionPayloads {
 
   // aigram
   changeMainTabStatus: { newTab: MainTabStatus };
+  initAigramFromApp: undefined;
   initAigramTaskList: { taskList: TaskItem[] };
   updateAigramTotalScore: { score: number };
   updateAigramInviteCode: { code: string };
