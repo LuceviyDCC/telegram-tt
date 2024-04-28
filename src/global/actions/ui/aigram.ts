@@ -8,6 +8,18 @@ import { callApi } from '../../../api/gramjs';
 import { addActionHandler, getGlobal, setGlobal } from '../../index';
 import { addChats } from '../../reducers';
 
+addActionHandler('initAigramFromApp', (global): ActionReturnType => {
+  const params = qs.parse(window.location.search.slice(1));
+  const isInApp = params[IS_AIGRAM_IN_URL] === '1';
+  const tokenFromApp = (params[AXIOS_TOKEN_KEY_IN_URL] || '') as string;
+
+  return {
+    ...global,
+    aigramIsInApp: isInApp,
+    aigramTokenFromApp: isInApp ? tokenFromApp : '',
+  };
+});
+
 addActionHandler('changeMainTabStatus', (global, actions, payload): ActionReturnType => {
   const {
     newTab,
@@ -19,15 +31,14 @@ addActionHandler('changeMainTabStatus', (global, actions, payload): ActionReturn
   };
 });
 
-addActionHandler('initAigramFromApp', (global): ActionReturnType => {
-  const params = qs.parse(window.location.search.slice(1));
-  const isInApp = params[IS_AIGRAM_IN_URL] === '1';
-  const tokenFromApp = (params[AXIOS_TOKEN_KEY_IN_URL] || '') as string;
+addActionHandler('updateShowAigramScoreDetail', (global, actions, payload): ActionReturnType => {
+  const {
+    showScoreDetail,
+  } = payload!;
 
   return {
     ...global,
-    aigramIsInApp: isInApp,
-    aigramTokenFromApp: isInApp ? tokenFromApp : '',
+    aigramShowScoreDetail: showScoreDetail,
   };
 });
 

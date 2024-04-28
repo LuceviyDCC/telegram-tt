@@ -1,13 +1,10 @@
 import type { FC } from '../../../../lib/teact/teact';
 import React, { memo, useCallback, useEffect, useState } from '../../../../lib/teact/teact';
+import { getActions } from '../../../../global';
 
-import { LeftColumnContent } from '../../../../types';
-
-import { LAYERS_ANIMATION_NAME } from '../../../../util/windowEnvironment';
 import { getScoreDetailList } from '../../../../api/axios/task';
 
 import Button from '../../../ui/Button';
-import Transition from '../../../ui/Transition';
 import { TaskTitleHash, TaskType } from '../AiGramTaskItem';
 
 import "./AiGramScoreDetail.scss";
@@ -33,10 +30,13 @@ const TaskIconHash = {
 } as const;
 
 interface OwnProps {
-  onContentChange: (content: LeftColumnContent) => void;
 }
 
-const AiGramScoreDetail: FC<OwnProps> = ({ onContentChange }) => {
+const AiGramScoreDetail: FC<OwnProps> = () => {
+  const {
+    updateShowAigramScoreDetail,
+  } = getActions();
+
   const [detailList, setDetailList] = useState<ScoreDetail[]>([]);
 
   useEffect(() => {
@@ -56,13 +56,13 @@ const AiGramScoreDetail: FC<OwnProps> = ({ onContentChange }) => {
   }
 
   const onBack = useCallback(() => {
-    onContentChange(LeftColumnContent.ChatList);
-  }, [onContentChange]);
+    updateShowAigramScoreDetail({ showScoreDetail: false });
+  }, []);
 
   function renderCurrentSection() {
     return (
       <>
-        <div className="left-header detail-header">
+        <div className="detail-header">
           <Button
             className='detail-header-btn'
             round
@@ -94,17 +94,7 @@ const AiGramScoreDetail: FC<OwnProps> = ({ onContentChange }) => {
     );
   }
 
-  return (
-    <Transition
-      id="Settings"
-      name={LAYERS_ANIMATION_NAME}
-      activeKey={0}
-      shouldWrap
-      withSwipeControl
-    >
-      {renderCurrentSection}
-    </Transition>
-  );
+  return renderCurrentSection();
 };
 
 export default memo(AiGramScoreDetail);

@@ -737,8 +737,9 @@ export type GlobalState = {
   };
 
   // aigram
-  mainTabStatus?: MainTabStatus;
   aigramIsInApp: boolean;
+  mainTabStatus?: MainTabStatus;
+  aigramShowScoreDetail: boolean;
   aigramTokenFromApp?: string;
   aigramTaskList?: TaskItem[];
   aigramTotalScore: number;
@@ -1046,8 +1047,9 @@ export interface ActionPayloads {
   goToAuthQrCode: undefined;
 
   // aigram
-  changeMainTabStatus: { newTab: MainTabStatus };
   initAigramFromApp: undefined;
+  changeMainTabStatus: { newTab: MainTabStatus };
+  updateShowAigramScoreDetail: { showScoreDetail: boolean };
   initAigramTaskList: { taskList: TaskItem[] };
   updateAigramTotalScore: { score: number };
   updateAigramInviteCode: { code: string };

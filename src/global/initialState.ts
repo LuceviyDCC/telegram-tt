@@ -275,6 +275,7 @@ export const INITIAL_GLOBAL_STATE: GlobalState = {
 
   // aigram
   aigramIsInApp: false,
+  aigramShowScoreDetail: false,
   aigramTokenFromApp: '',
   aigramTotalScore: 0,
   aigramHasSigned: 0,
