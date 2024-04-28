@@ -264,6 +264,7 @@
         }
 
         &-main {
+          padding-right: 2rem;
           flex: 1;
           text-align: left;
         }
@@ -292,7 +293,6 @@
         &-content {
           margin-top: 0.3125rem;
           padding-left: 0.875rem;
-          padding-right: 2rem;
           position: relative;
 
           font-weight: 400;

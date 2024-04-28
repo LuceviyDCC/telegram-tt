@@ -103,3 +103,37 @@
     }
   }
 }
+
+.detail__empty {
+  height: calc(100% - var(--header-height));
+  background-color: #141416;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .empty-img {
+    width: 8.4375rem;
+    height: 7.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .empty-title {
+    margin-bottom: 0.6875rem;
+    line-height: 1;
+
+    font-weight: 400;
+    font-size: 1.1875rem;
+    color: #FFFFFF;
+  }
+
+  .empty-text {
+    margin-bottom: 0.1875rem;
+    line-height: 1;
+
+    font-size: 0.75rem;
+    color: #FFFFFF;
+    opacity: 0.5;
+  }
+}

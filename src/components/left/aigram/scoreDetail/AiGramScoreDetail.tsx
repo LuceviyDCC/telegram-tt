@@ -11,6 +11,7 @@ import "./AiGramScoreDetail.scss";
 
 import TaskIcon3 from '../../../../assets/aigram/bind.png';
 import TaskIcon4 from '../../../../assets/aigram/daily.png';
+import EmptyIcon from '../../../../assets/aigram/empty.png';
 import TaskIcon1 from '../../../../assets/aigram/follow.png';
 import TaskIcon2 from '../../../../assets/aigram/invite.png';
 
@@ -37,6 +38,7 @@ const AiGramScoreDetail: FC<OwnProps> = () => {
     updateShowAigramScoreDetail,
   } = getActions();
 
+  const [hasInit, setHasInit] = useState(false);
   const [detailList, setDetailList] = useState<ScoreDetail[]>([]);
 
   useEffect(() => {
@@ -53,6 +55,7 @@ const AiGramScoreDetail: FC<OwnProps> = () => {
       nowScore: item.current_score,
       date: item.created_at.split('T')[0],
     })));
+    setHasInit(true);
   }
 
   const onBack = useCallback(() => {
@@ -75,21 +78,36 @@ const AiGramScoreDetail: FC<OwnProps> = () => {
           </Button>
           Points Details
         </div>
-        <div className='detail__list'>{
-          detailList.map(detail => (
-            <div className='detail__item'>
-              <img src={TaskIconHash[detail.type]} alt="detail" className="detail__item-icon"  />
-              <div className='detail__item-main'>
-                <div className='detail__item-title'>{detail.title}</div>
-                <div className='detail__item-date'>{detail.date}</div>
+        {
+          hasInit && (
+            detailList.length > 0 ? (
+              <div className='detail__list'>
+                {
+                  detailList.map(detail => (
+                    <div className='detail__item'>
+                      <img src={TaskIconHash[detail.type]} alt="detail" className="detail__item-icon"  />
+                      <div className='detail__item-main'>
+                        <div className='detail__item-title'>{detail.title}</div>
+                        <div className='detail__item-date'>{detail.date}</div>
+                      </div>
+                      <div className='detail__item-score'>
+                        <div className='detail__item-add'>+{detail.addScore}</div>
+                        <div className='detail__item-total'>{detail.nowScore}</div>
+                      </div>
+                    </div>
+                  ))
+                }
               </div>
-              <div className='detail__item-score'>
-                <div className='detail__item-add'>+{detail.addScore}</div>
-                <div className='detail__item-total'>{detail.nowScore}</div>
+            ) : (
+              <div className='detail__empty'>
+                <img className='empty-img' alt='empty' src={EmptyIcon}  />
+                <div className='empty-title'>No detail</div>
+                <div className='empty-text'>You have not earned</div>
+                <div className='empty-text'>any point so far</div>
               </div>
-            </div>
-          ))
-        }</div>
+            )
+          )
+        }
       </>
     );
   }
