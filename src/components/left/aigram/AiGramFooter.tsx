@@ -31,7 +31,13 @@ const AiGramFooter: FC<StateProps> = ({
   }, [changeMainTabStatus]);
 
   return (
-    <div id="AiGram_Footer" className="AiGram_Footer">
+    <div
+      id="AiGram_Footer"
+      className={buildClassName(
+        "AiGram_Footer",
+        mainTabStatus === MainTabStatus.AiGram && "aigram"
+      )}
+    >
       <div
         className={buildClassName("tab__item", mainTabStatus === MainTabStatus.TeleGram && "active")}
         onClick={() => handleChangeTabStatus(MainTabStatus.TeleGram)}
