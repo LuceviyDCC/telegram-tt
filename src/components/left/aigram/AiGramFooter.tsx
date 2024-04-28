@@ -10,7 +10,8 @@ import './AiGramFooter.scss';
 
 import Home from '../../../assets/aigram/aigram_home.png';
 import HomeActive from '../../../assets/aigram/aigram_home_active.png';
-import Task from '../../../assets/aigram/aigram_task.png';
+import TaskActive from '../../../assets/aigram/aigram_task.png';
+import Task from '../../../assets/aigram/aigram_task_disabled.png';
 
 interface StateProps {
   mainTabStatus: MainTabStatus;
@@ -47,7 +48,11 @@ const AiGramFooter: FC<StateProps> = ({
         className={buildClassName("tab__item", mainTabStatus === MainTabStatus.AiGram && "active")}
         onClick={() => handleChangeTabStatus(MainTabStatus.AiGram)}
       >
-        <img className="tab__item-icon" alt="Chats" src={Task} />
+        <img
+          className="tab__item-icon"
+          alt="Chats"
+          src={mainTabStatus === MainTabStatus.AiGram ? TaskActive : Task}
+        />
         AiGram
       </div>
     </div>
