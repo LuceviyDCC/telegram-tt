@@ -80,6 +80,10 @@ body.is-electron {
   --custom-cursor: default;
 }
 
+body.is-aigram {
+  background-color: #141416 !important;
+}
+
 body.cursor-grabbing {
   --custom-cursor: grabbing;
   cursor: grabbing !important;
