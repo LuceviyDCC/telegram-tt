@@ -8,6 +8,7 @@ import { buildCollectionByKey } from '../../../util/iteratees';
 import { callApi } from '../../../api/gramjs';
 import { addActionHandler, getGlobal, setGlobal } from '../../index';
 import { addChats } from '../../reducers';
+import { selectTheme } from '../../selectors';
 
 addActionHandler('initAigramFromApp', (global): ActionReturnType => {
   const params = qs.parse(window.location.search.slice(1));
@@ -25,10 +26,20 @@ addActionHandler('changeMainTabStatus', (global, actions, payload): ActionReturn
   const {
     newTab,
   } = payload!;
+  const theme = selectTheme(global);
+  const isDarkTheme = theme === 'dark';
+  const themeColorTag = document.querySelector('meta[name="theme-color"]');
+
 
   if (newTab === MainTabStatus.AiGram) {
+    if (themeColorTag) {
+      themeColorTag.setAttribute('content', '#141416');
+    }
     document.body.classList.add('is-aigram');
   } else {
+    if (themeColorTag) {
+      themeColorTag.setAttribute('content', isDarkTheme ? '#212121' : '#fff');
+    }
     document.body.classList.remove('is-aigram');
   }
 
