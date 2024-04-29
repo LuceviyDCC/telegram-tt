@@ -29,6 +29,17 @@ export function completeTask(taskId: number) {
   });
 }
 
+export function completeJoinTask(options: {
+  group_url: string;
+  phone: string;
+  tg_name: string;
+  nick_name: string;
+}) {
+  return request.post('/apis/v1/task/user_join_group', {
+    ...options
+  });
+}
+
 export function getScoreDetailList() {
   return request.get<any, Array<{
     created_at: string;

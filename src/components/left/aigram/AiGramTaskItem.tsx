@@ -2,8 +2,12 @@ import type { FC } from "../../../lib/teact/teact";
 import React, {memo, useCallback} from "../../../lib/teact/teact";
 import { getActions, withGlobal } from "../../../global";
 
+import type { ApiUser } from "../../../api/types";
+
+import { selectUser } from "../../../global/selectors";
 import buildClassName from "../../../util/buildClassName";
 import { copyTextToClipboard } from "../../../util/clipboard";
+import { completeJoinTask } from "../../../api/axios/task";
 
 import Button from "../../ui/Button";
 
@@ -12,7 +16,6 @@ import TipsIcon from '../../../assets/aigram/score_q.png';
 import TaskIcon1 from '../../../assets/aigram/task_1.png';
 import TaskIcon2 from '../../../assets/aigram/task_2.png';
 import TaskIcon3 from '../../../assets/aigram/task_3.png';
-
 
 export enum TaskType {
   DAILY = 1,
@@ -53,6 +56,10 @@ export interface TaskItem {
   tips?: string;
 }
 
+const JOIN_TASK_GROUP_URL = 'https://t.me/AIGramLab';
+const GROUP_CHAT_ID = '-1002123962275';
+const GROUP_NAME = 'aigramLab';
+
 export interface OwnProps {
   taskInfo: TaskItem;
   inviteCode: string;
@@ -60,6 +67,7 @@ export interface OwnProps {
 
 interface StateProps {
   isInApp: boolean;
+  currentUserInfo?: ApiUser;
 }
 
 declare global {
@@ -72,7 +80,7 @@ declare global {
 }
 
 const AiGramTaskItem: FC<StateProps & OwnProps> = (props) => {
-  const { taskInfo, inviteCode, isInApp } = props;
+  const { taskInfo, inviteCode, isInApp, currentUserInfo } = props;
   const { type, tips } = taskInfo;
 
   const {
@@ -81,6 +89,30 @@ const AiGramTaskItem: FC<StateProps & OwnProps> = (props) => {
     openChat,
     joinChannel,
   } = getActions();
+
+  const onCompleteJoinTask = useCallback(() => {
+    if (!currentUserInfo) {
+      return;
+    }
+
+    const currentUserNameInfoList = currentUserInfo.usernames || [];
+    let userName = '';
+
+    for (let i = 0; i < currentUserNameInfoList.length; i++) {
+      if (currentUserNameInfoList[i].isActive) {
+        userName = currentUserNameInfoList[i].username;
+      }
+    }
+
+    completeJoinTask({
+      group_url: JOIN_TASK_GROUP_URL,
+      tg_name: userName,
+      phone: currentUserInfo.phoneNumber || '',
+      nick_name: (currentUserInfo.firstName || currentUserInfo.lastName)
+        ? `${currentUserInfo.firstName} ${currentUserInfo.lastName}`
+        : '',
+    });
+  }, [currentUserInfo]);
 
   const onTaskClick = useCallback(async () => {
     if (taskInfo.type === TaskType.INVITE) {
@@ -92,14 +124,16 @@ const AiGramTaskItem: FC<StateProps & OwnProps> = (props) => {
       }
     } else if (taskInfo.type === TaskType.FOLLOW) {
       if (!isInApp) {
-        await searchAigramChat({ name: 'aigramLab' });
-        openChat({ id: '-1002123962275' });
-        joinChannel({ chatId: '-1002123962275' });
+        await searchAigramChat({ name: GROUP_NAME });
+        openChat({ id: GROUP_CHAT_ID });
+        joinChannel({ chatId: GROUP_CHAT_ID });
+        onCompleteJoinTask();
       } else {
-        window.CusTgJsBridge?.jump('aigramLab');
+        window.CusTgJsBridge?.jump(GROUP_NAME);
       }
     }
-  }, [taskInfo.type, inviteCode, isInApp]);
+  }, [taskInfo.type, inviteCode, isInApp, onCompleteJoinTask]);
+
   return (
     <Button className="task__item" onClick={onTaskClick}>
       {
@@ -130,6 +164,7 @@ export default memo(withGlobal<OwnProps>(
   (global): StateProps => {
     return {
       isInApp: global.aigramIsInApp,
+      currentUserInfo: global.currentUserId ? selectUser(global, global.currentUserId) : undefined
     };
   },
 )(AiGramTaskItem));

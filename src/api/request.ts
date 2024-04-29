@@ -52,6 +52,14 @@ export function login() {
   }
 
   const currentUser = selectUser(global, global.currentUserId);
+  const currentUserNameInfoList = currentUser?.usernames || [];
+  let userName = '';
+
+  for (let i = 0; i < currentUserNameInfoList.length; i++) {
+    if (currentUserNameInfoList[i].isActive) {
+      userName = currentUserNameInfoList[i].username;
+    }
+  }
 
   if (!LOGIN_PROMISE) {
     LOGIN_PROMISE = instance.post<any, {
@@ -62,7 +70,7 @@ export function login() {
       app_id: 'ai',
 
       phone: currentUser?.phoneNumber || '',
-      tg_name: currentUser?.usernames?.[0]?.username || '',
+      tg_name: userName,
       tg_id: currentUser?.id || ''
     });
 
