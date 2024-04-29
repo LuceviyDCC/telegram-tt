@@ -62,6 +62,15 @@ interface StateProps {
   isInApp: boolean;
 }
 
+declare global {
+  interface Window {
+    CusTgJsBridge?: {
+      copyText: (text: string) => void;
+      jump: (page: string) => void;
+    };
+  }
+}
+
 const AiGramTaskItem: FC<StateProps & OwnProps> = (props) => {
   const { taskInfo, inviteCode, isInApp } = props;
   const { type, tips } = taskInfo;
@@ -75,10 +84,11 @@ const AiGramTaskItem: FC<StateProps & OwnProps> = (props) => {
 
   const onTaskClick = useCallback(async () => {
     if (taskInfo.type === TaskType.INVITE) {
-      copyTextToClipboard(inviteCode);
-
       if (!isInApp) {
+        copyTextToClipboard(inviteCode);
         showNotification({ message: `invite code was copied` });
+      } else {
+        window.CusTgJsBridge?.copyText(inviteCode);
       }
     } else if (taskInfo.type === TaskType.FOLLOW) {
       if (!isInApp) {
@@ -86,7 +96,7 @@ const AiGramTaskItem: FC<StateProps & OwnProps> = (props) => {
         openChat({ id: '-1002123962275' });
         joinChannel({ chatId: '-1002123962275' });
       } else {
-        // todo: add app func
+        window.CusTgJsBridge?.jump('aigramLab');
       }
     }
   }, [taskInfo.type, inviteCode, isInApp]);
