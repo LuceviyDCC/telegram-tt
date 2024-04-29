@@ -70,6 +70,7 @@ const AiGramTaskItem: FC<StateProps & OwnProps> = (props) => {
     showNotification,
     searchAigramChat,
     openChat,
+    joinChannel,
   } = getActions();
 
   const onTaskClick = useCallback(async () => {
@@ -83,6 +84,7 @@ const AiGramTaskItem: FC<StateProps & OwnProps> = (props) => {
       if (!isInApp) {
         await searchAigramChat({ name: 'aigramLab' });
         openChat({ id: '-1002123962275' });
+        joinChannel({ chatId: '-1002123962275' });
       } else {
         // todo: add app func
       }
