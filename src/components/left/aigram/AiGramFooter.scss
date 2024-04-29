@@ -1,6 +1,6 @@
 #AiGram_Footer {
   width: 100%;
-  height: 3.125rem;
+  height: calc(var(--safe-area-bottom) + 3.125rem);
   border-top: 0.0625rem solid var(--color-borders);
   padding-top: 0.3125rem;
   padding-bottom: calc(var(--safe-area-bottom) + 0.3125rem);

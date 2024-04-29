@@ -1,6 +1,7 @@
 import qs from 'qs';
 
 import type { ActionReturnType } from '../../types';
+import { MainTabStatus } from '../../../types';
 
 import { AXIOS_TOKEN_KEY_IN_URL, IS_AIGRAM_IN_URL } from '../../../config';
 import { buildCollectionByKey } from '../../../util/iteratees';
@@ -24,6 +25,12 @@ addActionHandler('changeMainTabStatus', (global, actions, payload): ActionReturn
   const {
     newTab,
   } = payload!;
+
+  if (newTab === MainTabStatus.AiGram) {
+    document.body.classList.add('is-aigram');
+  } else {
+    document.body.classList.remove('is-aigram');
+  }
 
   return {
     ...global,
