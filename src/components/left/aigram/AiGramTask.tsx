@@ -3,6 +3,7 @@ import React from "../../../lib/teact/teact";
 import { getActions, withGlobal } from "../../../global";
 
 import type { TaskItem } from "./AiGramTaskItem";
+import { AiGramPageStatus } from "../../../types";
 
 import { LAYERS_ANIMATION_NAME } from "../../../util/windowEnvironment";
 import { getTaskInfo, getTaskList } from "../../../api/axios/task";
@@ -19,6 +20,7 @@ import './AiGramTask.scss';
 import AIScoreBtnIcon from '../../../assets/aigram/score.png';
 import AITips from '../../../assets/aigram/score_q.png';
 
+
 interface StateProps {
   score: number;
   hasSigned: number;
@@ -26,7 +28,7 @@ interface StateProps {
   inviteCode: string;
   taskList: TaskItem[];
   isInApp: boolean;
-  showScoreDetail: boolean;
+  pageStatus: AiGramPageStatus;
 };
 
 const DAILY_NUM = 7;
@@ -40,7 +42,7 @@ const AiGramTask: FC<StateProps> = ({
   inviteCode,
   taskList,
   isInApp,
-  showScoreDetail,
+  pageStatus,
 }) => {
   const {
     initAigramTaskList,
@@ -108,10 +110,7 @@ const AiGramTask: FC<StateProps> = ({
     initTaskInfo();
   }, [hasSigned]);
 
-  function renderContent() {
-    if (showScoreDetail) {
-      return <AiGramScoreDetail />;
-    }
+  function renderIndex () {
     return (
       <div id="AiGram_Task" className="aigram__task">
         <div className="aigram__task-header">
@@ -175,11 +174,22 @@ const AiGramTask: FC<StateProps> = ({
     );
   }
 
+  function renderContent() {
+    switch (pageStatus) {
+      case AiGramPageStatus.Index:
+        return renderIndex();
+      case AiGramPageStatus.ScoreDetail:
+        return <AiGramScoreDetail />;
+      default:
+        return <div />;
+    }
+  }
+
   return (
     <Transition
       id="AigramTask"
       name={LAYERS_ANIMATION_NAME}
-      activeKey={showScoreDetail ? 1 : 0}
+      activeKey={pageStatus}
     >{renderContent}</Transition>
   );
 };
@@ -193,7 +203,7 @@ export default memo(withGlobal(
       inviteCode: global.aigramInviteCode,
       taskList: global.aigramTaskList || [],
       isInApp: global.aigramIsInApp,
-      showScoreDetail: global.aigramShowScoreDetail,
+      pageStatus: global.aigramPageStatus,
     };
   },
 )(AiGramTask));

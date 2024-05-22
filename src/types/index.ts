@@ -267,6 +267,13 @@ export enum MainTabStatus {
   AiGram,
 }
 
+export enum AiGramPageStatus {
+  Index,
+  ScoreDetail,
+  EventList,
+  EventDetail,
+}
+
 export enum GlobalSearchContent {
   ChatList,
   Media,

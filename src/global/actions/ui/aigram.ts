@@ -1,7 +1,7 @@
 import qs from 'qs';
 
 import type { ActionReturnType } from '../../types';
-import { MainTabStatus } from '../../../types';
+import { AiGramPageStatus, MainTabStatus } from '../../../types';
 
 import { AXIOS_TOKEN_KEY_IN_URL, IS_AIGRAM_IN_URL } from '../../../config';
 import { buildCollectionByKey } from '../../../util/iteratees';
@@ -56,7 +56,7 @@ addActionHandler('updateShowAigramScoreDetail', (global, actions, payload): Acti
 
   return {
     ...global,
-    aigramShowScoreDetail: showScoreDetail,
+    aigramPageStatus: showScoreDetail ? AiGramPageStatus.ScoreDetail : AiGramPageStatus.Index,
   };
 });
 

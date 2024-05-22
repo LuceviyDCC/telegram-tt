@@ -1,6 +1,6 @@
 import type { PerformanceType } from '../types';
 import type { GlobalState, TabState } from './types';
-import { NewChatMembersProgress } from '../types';
+import { AiGramPageStatus, NewChatMembersProgress } from '../types';
 
 import {
   ANIMATION_LEVEL_DEFAULT,
@@ -275,7 +275,7 @@ export const INITIAL_GLOBAL_STATE: GlobalState = {
 
   // aigram
   aigramIsInApp: false,
-  aigramShowScoreDetail: false,
+  aigramPageStatus: AiGramPageStatus.Index,
   aigramTokenFromApp: '',
   aigramTotalScore: 0,
   aigramHasSigned: 0,

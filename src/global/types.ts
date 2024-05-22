@@ -78,6 +78,7 @@ import type { FoldersActions } from '../hooks/reducers/useFoldersReducer';
 import type { ReducerAction } from '../hooks/useReducer';
 import type { P2pMessage } from '../lib/secret-sauce';
 import type {
+  AiGramPageStatus,
   ApiInvoiceContainer,
   ApiPrivacyKey,
   ApiPrivacySettings,
@@ -739,7 +740,7 @@ export type GlobalState = {
   // aigram
   aigramIsInApp: boolean;
   mainTabStatus?: MainTabStatus;
-  aigramShowScoreDetail: boolean;
+  aigramPageStatus: AiGramPageStatus;
   aigramTokenFromApp?: string;
   aigramTaskList?: TaskItem[];
   aigramTotalScore: number;
