@@ -176,12 +176,10 @@ const AiGramTask: FC<StateProps> = ({
 
   function renderContent() {
     switch (pageStatus) {
-      case AiGramPageStatus.Index:
-        return renderIndex();
       case AiGramPageStatus.ScoreDetail:
         return <AiGramScoreDetail />;
       default:
-        return <div />;
+        return renderIndex();
     }
   }
 
