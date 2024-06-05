@@ -2,6 +2,8 @@ import type { FC } from '../../../../lib/teact/teact';
 import React, { memo, useCallback, useEffect, useState } from '../../../../lib/teact/teact';
 import { getActions } from '../../../../global';
 
+import { AiGramPageStatus } from '../../../../types';
+
 import { getScoreDetailList } from '../../../../api/axios/task';
 
 import Button from '../../../ui/Button';
@@ -35,7 +37,7 @@ interface OwnProps {
 
 const AiGramScoreDetail: FC<OwnProps> = () => {
   const {
-    updateShowAigramScoreDetail,
+    changeAiGramPage,
   } = getActions();
 
   const [hasInit, setHasInit] = useState(false);
@@ -59,7 +61,7 @@ const AiGramScoreDetail: FC<OwnProps> = () => {
   }
 
   const onBack = useCallback(() => {
-    updateShowAigramScoreDetail({ showScoreDetail: false });
+    changeAiGramPage({ pageStatus: AiGramPageStatus.Index });
   }, []);
 
   function renderCurrentSection() {

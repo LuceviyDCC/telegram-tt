@@ -1050,7 +1050,7 @@ export interface ActionPayloads {
   // aigram
   initAigramFromApp: undefined;
   changeMainTabStatus: { newTab: MainTabStatus };
-  updateShowAigramScoreDetail: { showScoreDetail: boolean };
+  changeAiGramPage: { pageStatus: AiGramPageStatus };
   initAigramTaskList: { taskList: TaskItem[] };
   updateAigramTotalScore: { score: number };
   updateAigramInviteCode: { code: string };

@@ -13,6 +13,7 @@ import Transition from "../../ui/Transition";
 import AiGramDailyItem from './AiGramDailyItem';
 import AiGramFooter from "./AiGramFooter";
 import AiGramTaskItem, { TaskType } from "./AiGramTaskItem";
+import EventList from "./event/EventList";
 import AiGramScoreDetail from "./scoreDetail/AiGramScoreDetail";
 
 import './AiGramTask.scss';
@@ -49,7 +50,7 @@ const AiGramTask: FC<StateProps> = ({
     updateAigramInviteCode,
     updateAigramSignedInfo,
     updateAigramTotalScore,
-    updateShowAigramScoreDetail,
+    changeAiGramPage,
   } = getActions();
 
   useEffect(() => {
@@ -99,8 +100,12 @@ const AiGramTask: FC<StateProps> = ({
   }
 
   function handleToDetail () {
-    updateShowAigramScoreDetail({ showScoreDetail: true });
+    changeAiGramPage({ pageStatus: AiGramPageStatus.ScoreDetail });
   }
+
+  const handleToEventList = useCallback(() => {
+    changeAiGramPage({ pageStatus: AiGramPageStatus.EventList });
+  }, []);
 
   const handleCompleteDaily = useCallback(() => {
     updateAigramSignedInfo({
@@ -126,7 +131,7 @@ const AiGramTask: FC<StateProps> = ({
               </div>
               <div className="total__score-detail-num">{score}</div>
             </div>
-            <Button className="total__score-exchange">
+            <Button className="total__score-exchange" onClick={handleToEventList}>
               <img className="total__score-exchange-icon" src={AIScoreBtnIcon} alt="score" />
               <span className="total__score-exchange-txt">Exchange</span>
             </Button>
@@ -178,6 +183,8 @@ const AiGramTask: FC<StateProps> = ({
     switch (pageStatus) {
       case AiGramPageStatus.ScoreDetail:
         return <AiGramScoreDetail />;
+      case AiGramPageStatus.EventList:
+        return <EventList />;
       default:
         return renderIndex();
     }
