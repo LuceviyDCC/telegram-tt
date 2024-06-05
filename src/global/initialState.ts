@@ -282,6 +282,7 @@ export const INITIAL_GLOBAL_STATE: GlobalState = {
   aigramTodaySigned: false,
   aigramTaskList: [],
   aigramInviteCode: '',
+  aigramEventCategoryList: []
 };
 
 export const INITIAL_TAB_STATE: TabState = {

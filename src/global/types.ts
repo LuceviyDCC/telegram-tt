@@ -747,6 +747,10 @@ export type GlobalState = {
   aigramHasSigned: number;
   aigramTodaySigned: boolean;
   aigramInviteCode: string;
+  aigramEventCategoryList: Array<{
+    ID: number;
+    Name: string;
+  }>;
 
   // TODO Move to `auth`.
   isLoggingOut?: boolean;
@@ -1056,6 +1060,7 @@ export interface ActionPayloads {
   updateAigramInviteCode: { code: string };
   updateAigramSignedInfo: { hasSigned?: number; todaySigned?: boolean };
   searchAigramChat: { name: string };
+  updateAigramEventCategory: { categoryList: Array<{ ID: number; Name: string}>};
 
   // stickers & GIFs
   setStickerSearchQuery: { query?: string } & WithTabId;

@@ -33,6 +33,7 @@ type OwnProps = {
   canClose?: boolean;
   autoFocusSearch?: boolean;
   onChange: (value: string) => void;
+  onEnter?: NoneToVoidFunction;
   onReset?: NoneToVoidFunction;
   onFocus?: NoneToVoidFunction;
   onBlur?: NoneToVoidFunction;
@@ -59,6 +60,7 @@ const SearchInput: FC<OwnProps> = ({
   onReset,
   onFocus,
   onBlur,
+  onEnter,
   onSpinnerClick,
 }) => {
   // eslint-disable-next-line no-null/no-null
@@ -110,8 +112,12 @@ const SearchInput: FC<OwnProps> = ({
       if (element) {
         element.focus();
       }
+
+      if (e.key === 'Enter' && onEnter) {
+        onEnter();
+      }
     }
-  }, [parentContainerClassName]);
+  }, [parentContainerClassName, onEnter]);
 
   return (
     <div

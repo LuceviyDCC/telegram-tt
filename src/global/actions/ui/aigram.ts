@@ -125,3 +125,14 @@ addActionHandler('searchAigramChat', async (global, actions, payload): Promise<v
 
   setGlobal(global);
 });
+
+addActionHandler('updateAigramEventCategory', (global, actions, payload): ActionReturnType => {
+  const {
+    categoryList,
+  } = payload!;
+
+  return {
+    ...global,
+    aigramEventCategoryList: categoryList
+  };
+});
