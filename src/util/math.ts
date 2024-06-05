@@ -9,3 +9,13 @@ export const lerp = (start: number, end: number, interpolationRatio: number) => 
 export function roundToNearestEven(value: number) {
   return Math.round(value / 2) * 2;
 }
+
+export function getNumInShortStr(num: number) {
+  if (num < 1000) {
+    return num;
+  } else if (num < 1000 * 1000) {
+    return `${(num / 1000).toFixed(2)}k`;
+  } else {
+    return `${(num / 1000 / 1000).toFixed(2)}m`;
+  }
+}

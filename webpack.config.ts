@@ -45,7 +45,7 @@ const CSP = `
   script-src 'self' 'wasm-unsafe-eval' https://t.me/_websync_ https://telegram.me/_websync_ https://www.googletagmanager.com 'sha256-gPNb86Y1ML4FLVkMiC1WwcoGtB0v4ewCvgi+vCodwa4=' 'sha256-gQFzPbHfBXhvzkAG81iA8OkzRO9DjXkSNSF+aBYTdwI=';
   style-src 'self' 'unsafe-inline';
   img-src 'self' data: blob: https://ss3.4sqi.net/img/categories_v2/
-  ${IS_ELECTRON_BUILD ? `${BASE_URL}/` : ''};
+  ${IS_ELECTRON_BUILD ? `${BASE_URL}/` : ''} https://config-bucket-579250494100.s3.us-west-2.amazonaws.com/;
   media-src 'self' blob: data: ${IS_ELECTRON_BUILD ? [`${BASE_URL}/`, ELECTRON_HOST_URL].join(' ') : ''};
   object-src 'none';
   frame-src http: https:;
