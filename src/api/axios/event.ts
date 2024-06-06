@@ -13,6 +13,20 @@ export function getEventCategoryList() {
 
 export function getRecommendList() {
   return request.get<any, {
-    list: Array<EventInfo>;
+    list: EventInfo[];
   }>('/apis/v1/recommend/get_recommend_list');
+}
+
+export function getEventList(params: {
+  keyword: string;
+  offset: number;
+  limit?: number;
+}) {
+  return request.post<any, {
+    total: number;
+    list: EventInfo[];
+  }>('/apis/v1/assignment/get_assignment_list', {
+    limit: 20,
+    ...params,
+  });
 }

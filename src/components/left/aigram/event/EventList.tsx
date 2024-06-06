@@ -11,6 +11,7 @@ import { getEventCategoryList, getRecommendList } from '../../../../api/axios/ev
 import useSwipe from '../../../../hooks/touch/useSwipe';
 
 import Button from '../../../ui/Button';
+import InfiniteScroll from '../../../ui/InfiniteScroll';
 import SearchInput from '../../../ui/SearchInput';
 
 import "./EventList.scss";
@@ -43,6 +44,8 @@ interface StateProps {
   }>;
 }
 
+// const PAGE_SIZE = 20;
+
 const EventList: FC<OwnProps & StateProps> = ({
   categoryList
 }) => {
@@ -52,29 +55,24 @@ const EventList: FC<OwnProps & StateProps> = ({
   } = getActions();
   const [keyword, setKeyword] = useState('');
   const [category, setCategory] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const [sortKey, setSortKey] = useState<'earliest' | 'newest' | 'trending'>('earliest');
+  const [page, setPage] = useState(0);
 
-  const [activeRecommendIndex, setActiveRecommendIndex] = useState(-1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [eventList, setEventList] = useState<EventInfo[]>([]);
+  const totalEventListRef = useRef(0);
+
+  // 推荐容器
   const [recommendList, setRecommendList] = useState<EventInfo[]>([]);
   // eslint-disable-next-line no-null/no-null
   const recommendElRef = useRef<HTMLDivElement>(null);
+  // 推荐容器滑动切换相关
+  const [activeRecommendIndex, setActiveRecommendIndex] = useState(-1);
   const swipeState = useSwipe(recommendElRef);
   const isSwipeRef = useRef(false);
   const autoSwipeRef = useRef<NodeJS.Timeout>();
   const curActiveIndexRef = useRef(0);
   const listNumRef = useRef(0);
-
-  useEffect(() => {
-    if (swipeState.swiping) {
-      isSwipeRef.current = true;
-    } else if (isSwipeRef.current){
-      const offset = swipeState.direction === 'left' ? 1 : -1;
-      const target = activeRecommendIndex + offset;
-
-      isSwipeRef.current = false;
-      setActiveRecommendIndex(clamp(target, 0, recommendList.length - 1));
-    }
-  }, [swipeState.swiping, swipeState.direction, activeRecommendIndex, recommendList]);
 
   const startAutoChangeRecommendIndex = () => {
     clearTimeout(autoSwipeRef.current);
@@ -103,6 +101,24 @@ const EventList: FC<OwnProps & StateProps> = ({
     setActiveRecommendIndex(0);
   };
 
+  // const onGetEventList = async () => {
+  //   setIsLoading(true);
+
+  //   const { total, list } = await getEventList({
+  //     keyword,
+  //     offset: page
+  //   });
+
+  //   setIsLoading(false);
+  //   setEventList([...eventList, ...list]);
+  //   totalEventListRef.current = total;
+  // };
+
+  const resetListParams = () => {
+    setPage(0);
+    setEventList([]);
+  };
+
   const onBack = useCallback(() => {
     changeAiGramPage({ pageStatus: AiGramPageStatus.Index });
   }, []);
@@ -112,20 +128,25 @@ const EventList: FC<OwnProps & StateProps> = ({
   }, []);
 
   const handleSearch = useCallback( () => {
-    if(isLoading) {
+    resetListParams();
+  }, []);
+
+  const onLoadMore = useCallback(() => {
+    if (eventList.length >= totalEventListRef.current) {
       return;
     }
 
-    setIsLoading(true);
+    setPage(page + 1);
+  }, [page, eventList]);
 
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-  }, [isLoading]);
-
+  // 初始化
   useEffect(() => {
     initCategoryList();
     initRecommendList();
+
+    // todo:
+    setSortKey('earliest');
+    setIsLoading(false);
 
     return () => {
       if (autoSwipeRef.current) {
@@ -134,6 +155,19 @@ const EventList: FC<OwnProps & StateProps> = ({
     };
   }, []);
 
+  // 左右滑动
+  useEffect(() => {
+    if (swipeState.swiping) {
+      isSwipeRef.current = true;
+    } else if (isSwipeRef.current){
+      const offset = swipeState.direction === 'left' ? 1 : -1;
+      const target = activeRecommendIndex + offset;
+
+      isSwipeRef.current = false;
+      setActiveRecommendIndex(clamp(target, 0, recommendList.length - 1));
+    }
+  }, [swipeState.swiping, swipeState.direction, activeRecommendIndex, recommendList]);
+  // 自动左右滑
   useEffect(() => {
     listNumRef.current = recommendList.length;
     curActiveIndexRef.current = activeRecommendIndex;
@@ -142,6 +176,15 @@ const EventList: FC<OwnProps & StateProps> = ({
       startAutoChangeRecommendIndex();
     }
   }, [activeRecommendIndex, recommendList]);
+
+
+  useEffect(() => {
+    resetListParams();
+  }, [category, sortKey]);
+
+  useEffect(() => {
+
+  }, []);
 
   function renderCurrentSection() {
     return (
@@ -192,257 +235,125 @@ const EventList: FC<OwnProps & StateProps> = ({
           </div>
 
           <div className='main-content no-scrollbar'>
-            <div className='recommend-list' ref={recommendElRef}>
-              <div className='list-container' style={`transform: translateX(-${(activeRecommendIndex) * 21.1875}rem)`}>
-                {
-                  recommendList.map((recommendInfo) => (
-                    <div key={recommendInfo.id} className='recommend-item'>
-                      <div className='recommend-item-header'>
-                        <img
-                          className='cover'
-                          src={recommendInfo.image}
-                          alt='cover'
-                        />
-                        <div className='currency'>
-                          <img
-                            className='currency-icon'
-                            src={recommendInfo.currency_url}
-                            alt='currency'
-                          />
-                          <span className='smaller-txt'>
-                            {recommendInfo.currency_price} {recommendInfo.currency_name}
-                          </span>
-                        </div>
-                        <div className='score'>
-                          <span className='smaller-txt'>{recommendInfo.score} Points</span>
-                        </div>
-                      </div>
-                      <div className='recommend-item-content'>
-                        <div className='title'>
-                          {recommendInfo.name}
-                        </div>
-                        <div className='detail'>
-                          <img
-                            className='avatar'
-                            src={recommendInfo.avatar}
-                            alt='avatar'
-                          />
-                          <span className='nickname'>
-                            {recommendInfo.nickname}
-                          </span>
-                          <span className='hot'>
-                            <img
-                              className='hot-icon'
-                              src={HotIcon}
-                              alt='hot-icon'
-                            />
-                            {getNumInShortStr(recommendInfo.click_num)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                }
-              </div>
-            </div>
-            {
-              recommendList.length > 1 && (
-                <div className='dot-list'>
+            <InfiniteScroll
+              items={eventList}
+              onLoadMore={onLoadMore}
+            >
+              <div key='recommend-list' className='recommend-list' ref={recommendElRef}>
+                <div
+                  className='list-container'
+                  style={`transform: translateX(-${(activeRecommendIndex) * 21.1875}rem)`}
+                >
                   {
-                    recommendList.map((recommendInfo, index) => (
-                      <div
-                        key={recommendInfo.id}
-                        className={buildClassName('dot', index === activeRecommendIndex && 'active')}
-                      />
+                    recommendList.map((recommendInfo) => (
+                      <div key={recommendInfo.id} className='recommend-item'>
+                        <div className='recommend-item-header'>
+                          <img
+                            className='cover'
+                            src={recommendInfo.image}
+                            alt='cover'
+                          />
+                          <div className='currency'>
+                            <img
+                              className='currency-icon'
+                              src={recommendInfo.currency_url}
+                              alt='currency'
+                            />
+                            <span className='smaller-txt'>
+                              {recommendInfo.currency_price} {recommendInfo.currency_name}
+                            </span>
+                          </div>
+                          <div className='score'>
+                            <span className='smaller-txt'>{recommendInfo.score} Points</span>
+                          </div>
+                        </div>
+                        <div className='recommend-item-content'>
+                          <div className='title'>
+                            {recommendInfo.name}
+                          </div>
+                          <div className='detail'>
+                            <img
+                              className='avatar'
+                              src={recommendInfo.avatar}
+                              alt='avatar'
+                            />
+                            <span className='nickname'>
+                              {recommendInfo.nickname}
+                            </span>
+                            <span className='hot'>
+                              <img
+                                className='hot-icon'
+                                src={HotIcon}
+                                alt='hot-icon'
+                              />
+                              {getNumInShortStr(recommendInfo.click_num)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
                     ))
                   }
                 </div>
-              )
-            }
+              </div>
+              {
+                recommendList.length > 1 && (
+                  <div className='dot-list'>
+                    {
+                      recommendList.map((recommendInfo, index) => (
+                        <div
+                          key={recommendInfo.id}
+                          className={buildClassName('dot', index === activeRecommendIndex && 'active')}
+                        />
+                      ))
+                    }
+                  </div>
+                )
+              }
 
-            <div className='event-item'>
-              <img
-                className='cover'
-                src="https://config-bucket-579250494100.s3.us-west-2.amazonaws.com/static/index/Rectangle.png"
-                alt='cover'
-              />
-              <div className='event-item-detail'>
-                <div className='title'>
-                Follow On Twitter And Win 50 USDT
-                </div>
-                <div className='owner'>
-                  <img
-                    className='avatar'
-                    src='https://config-bucket-579250494100.s3.us-west-2.amazonaws.com/static/avatar/Ellipse.png'
-                    alt='avatar'
-                  />
-                  <span className='nickname'>
-                  Tear Structure
-                  </span>
-                  <span className='hot'>
+              {
+                eventList.map(eventInfo => (
+                  <div key={eventInfo.id} className='event-item'>
                     <img
-                      className='hot-icon'
-                      src={HotIcon}
-                      alt='hot-icon'
+                      className='cover'
+                      src={eventInfo.image}
+                      alt='cover'
                     />
-                    {getNumInShortStr(1483)}
-                  </span>
-                </div>
-              </div>
+                    <div className='event-item-detail'>
+                      <div className='title'>{eventInfo.name}</div>
+                      <div className='owner'>
+                        <img
+                          className='avatar'
+                          src={eventInfo.avatar}
+                          alt='avatar'
+                        />
+                        <span className='nickname'>{eventInfo.nickname}</span>
+                        <span className='hot'>
+                          <img
+                            className='hot-icon'
+                            src={HotIcon}
+                            alt='hot-icon'
+                          />
+                          {getNumInShortStr(eventInfo.click_num)}
+                        </span>
+                      </div>
+                    </div>
 
-              <div className='currency'>
-                <img
-                  className='currency-icon'
-                  src='https://config-bucket-579250494100.s3.us-west-2.amazonaws.com/static/currency/USDT.png'
-                  alt='currency'
-                />
-                <span className='smaller-txt'>
-                50 USDT
-                </span>
-              </div>
+                    <div className='currency'>
+                      <img
+                        className='currency-icon'
+                        src={eventInfo.currency_url}
+                        alt='currency'
+                      />
+                      <span className='smaller-txt'>{eventInfo.currency_price} {eventInfo.currency_name}</span>
+                    </div>
 
-              <div className='score'>
-                <span className='smaller-txt'>20 Points</span>
-              </div>
-            </div>
-
-            <div className='event-item'>
-              <img
-                className='cover'
-                src="https://config-bucket-579250494100.s3.us-west-2.amazonaws.com/static/index/Rectangle.png"
-                alt='cover'
-              />
-              <div className='event-item-detail'>
-                <div className='title'>
-                Follow On Twitter And Win 50 USDT
-                </div>
-                <div className='owner'>
-                  <img
-                    className='avatar'
-                    src='https://config-bucket-579250494100.s3.us-west-2.amazonaws.com/static/avatar/Ellipse.png'
-                    alt='avatar'
-                  />
-                  <span className='nickname'>
-                  Tear Structure
-                  </span>
-                  <span className='hot'>
-                    <img
-                      className='hot-icon'
-                      src={HotIcon}
-                      alt='hot-icon'
-                    />
-                    {getNumInShortStr(1483)}
-                  </span>
-                </div>
-              </div>
-
-              <div className='currency'>
-                <img
-                  className='currency-icon'
-                  src='https://config-bucket-579250494100.s3.us-west-2.amazonaws.com/static/currency/USDT.png'
-                  alt='currency'
-                />
-                <span className='smaller-txt'>
-                50 USDT
-                </span>
-              </div>
-
-              <div className='score'>
-                <span className='smaller-txt'>20 Points</span>
-              </div>
-            </div>
-
-            <div className='event-item'>
-              <img
-                className='cover'
-                src="https://config-bucket-579250494100.s3.us-west-2.amazonaws.com/static/index/Rectangle.png"
-                alt='cover'
-              />
-              <div className='event-item-detail'>
-                <div className='title'>
-                Follow On Twitter And Win 50 USDT
-                </div>
-                <div className='owner'>
-                  <img
-                    className='avatar'
-                    src='https://config-bucket-579250494100.s3.us-west-2.amazonaws.com/static/avatar/Ellipse.png'
-                    alt='avatar'
-                  />
-                  <span className='nickname'>
-                  Tear Structure
-                  </span>
-                  <span className='hot'>
-                    <img
-                      className='hot-icon'
-                      src={HotIcon}
-                      alt='hot-icon'
-                    />
-                    {getNumInShortStr(1483)}
-                  </span>
-                </div>
-              </div>
-
-              <div className='currency'>
-                <img
-                  className='currency-icon'
-                  src='https://config-bucket-579250494100.s3.us-west-2.amazonaws.com/static/currency/USDT.png'
-                  alt='currency'
-                />
-                <span className='smaller-txt'>
-                50 USDT
-                </span>
-              </div>
-
-              <div className='score'>
-                <span className='smaller-txt'>20 Points</span>
-              </div>
-            </div>
-
-            <div className='event-item'>
-              <img
-                className='cover'
-                src="https://config-bucket-579250494100.s3.us-west-2.amazonaws.com/static/index/Rectangle.png"
-                alt='cover'
-              />
-              <div className='event-item-detail'>
-                <div className='title'>
-                Follow On Twitter And Win 50 USDT
-                </div>
-                <div className='owner'>
-                  <img
-                    className='avatar'
-                    src='https://config-bucket-579250494100.s3.us-west-2.amazonaws.com/static/avatar/Ellipse.png'
-                    alt='avatar'
-                  />
-                  <span className='nickname'>
-                  Tear Structure
-                  </span>
-                  <span className='hot'>
-                    <img
-                      className='hot-icon'
-                      src={HotIcon}
-                      alt='hot-icon'
-                    />
-                    {getNumInShortStr(1483)}
-                  </span>
-                </div>
-              </div>
-
-              <div className='currency'>
-                <img
-                  className='currency-icon'
-                  src='https://config-bucket-579250494100.s3.us-west-2.amazonaws.com/static/currency/USDT.png'
-                  alt='currency'
-                />
-                <span className='smaller-txt'>
-                50 USDT
-                </span>
-              </div>
-
-              <div className='score'>
-                <span className='smaller-txt'>20 Points</span>
-              </div>
-            </div>
+                    <div className='score'>
+                      <span className='smaller-txt'>{eventInfo.score} Points</span>
+                    </div>
+                  </div>
+                ))
+              }
+            </InfiniteScroll>
           </div>
         </div>
       </>
