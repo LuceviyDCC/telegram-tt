@@ -13,6 +13,7 @@ import useSwipe from '../../../../hooks/touch/useSwipe';
 import Button from '../../../ui/Button';
 import InfiniteScroll from '../../../ui/InfiniteScroll';
 import SearchInput from '../../../ui/SearchInput';
+import  SortPanel, { SortTypeList } from './SortPanel';
 
 import "./EventList.scss";
 
@@ -55,12 +56,15 @@ const EventList: FC<OwnProps & StateProps> = ({
   } = getActions();
   const [keyword, setKeyword] = useState('');
   const [category, setCategory] = useState(0);
-  const [sortKey, setSortKey] = useState<'earliest' | 'newest' | 'trending'>('earliest');
+  const [sortKey, setSortKey] = useState<SortTypeList>(SortTypeList.EARLIEST);
   const [page, setPage] = useState(0);
 
   const [isLoading, setIsLoading] = useState(false);
   const [eventList, setEventList] = useState<EventInfo[]>([]);
   const totalEventListRef = useRef(0);
+
+  // 排序弹窗
+  const [showSortPanel, setShowSortPanel] = useState(false);
 
   // 推荐容器
   const [recommendList, setRecommendList] = useState<EventInfo[]>([]);
@@ -123,6 +127,17 @@ const EventList: FC<OwnProps & StateProps> = ({
     changeAiGramPage({ pageStatus: AiGramPageStatus.Index });
   }, []);
 
+  // 排序弹窗相关
+  const onShowSortPanel = useCallback(() => {
+    setShowSortPanel(true);
+  }, []);
+  const onHideSortPanel = useCallback(() => {
+    setShowSortPanel(false);
+  }, []);
+  const onSelectSort = useCallback((sortType: SortTypeList) => {
+    setSortKey(sortType);
+  }, []);
+
   const handleSearchInputChange = useCallback((newVal: string) => {
     setKeyword(newVal);
   }, []);
@@ -145,7 +160,7 @@ const EventList: FC<OwnProps & StateProps> = ({
     initRecommendList();
 
     // todo:
-    setSortKey('earliest');
+    setSortKey(SortTypeList.EARLIEST);
     setIsLoading(false);
 
     return () => {
@@ -206,6 +221,7 @@ const EventList: FC<OwnProps & StateProps> = ({
             size="smaller"
             color="translucent"
             ariaLabel='back'
+            onClick={onShowSortPanel}
           >
             <img className='sort-icon' src={SortIcon} alt='sort'/>
           </Button>
@@ -356,6 +372,16 @@ const EventList: FC<OwnProps & StateProps> = ({
             </InfiniteScroll>
           </div>
         </div>
+
+        {
+          showSortPanel && (
+            <SortPanel
+              activeSortType={sortKey}
+              onHidePanel={onHideSortPanel}
+              onSortTypeSelect={onSelectSort}
+            />
+          )
+        }
       </>
     );
   }

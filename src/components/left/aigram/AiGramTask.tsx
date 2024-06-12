@@ -13,6 +13,7 @@ import Transition from "../../ui/Transition";
 import AiGramDailyItem from './AiGramDailyItem';
 import AiGramFooter from "./AiGramFooter";
 import AiGramTaskItem, { TaskType } from "./AiGramTaskItem";
+import EventDetail from "./event/EventDetail";
 import EventList from "./event/EventList";
 import AiGramScoreDetail from "./scoreDetail/AiGramScoreDetail";
 
@@ -185,6 +186,8 @@ const AiGramTask: FC<StateProps> = ({
         return <AiGramScoreDetail />;
       case AiGramPageStatus.EventList:
         return <EventList />;
+      case AiGramPageStatus.EventDetail:
+        return <EventDetail />;
       default:
         return renderIndex();
     }
