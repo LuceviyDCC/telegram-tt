@@ -1,20 +1,51 @@
-import React, { type FC, memo, useCallback } from "../../../../lib/teact/teact";
+import React, { type FC, memo, useCallback, useRef, useState } from "../../../../lib/teact/teact";
 import { getActions, withGlobal } from "../../../../global";
 
 import { AiGramPageStatus } from "../../../../types";
 
+import buildClassName from "../../../../util/buildClassName";
+
+import useLastCallback from "../../../../hooks/useLastCallback";
+import useResizeObserver from "../../../../hooks/useResizeObserver";
+
 import Button from "../../../ui/Button";
 
-// import "./EventDetail.scss";
+import "./EventDetail.scss";
+
+import TelegramIcon from '../../../../assets/aigram/event/telegram.png';
+import VerifiedIcon from '../../../../assets/aigram/event/verify-icon.png';
+import XIcon from '../../../../assets/aigram/event/x.png';
+
 
 interface OwnProps {}
 
 interface StateProps {}
 
+const eventDetail = {
+  image: '',
+  nickname: 'AIGram',
+  isVerified: true,
+  title: 'Mystiko.Network Social Candy Box: Step One of the Event!sdfsod sdfsd sdf ',
+  desc: 'Welcome to Mystiko.Network! Mystiko.Network’s'
+};
+
 const EventDetail: FC<OwnProps & StateProps> = () => {
   const {
     changeAiGramPage
   } = getActions();
+
+  const [showMoreDesc, setShowMoreDesc] = useState(false);
+  const [showMoreBtn, setShowMoreBtn] = useState(false);
+  // eslint-disable-next-line no-null/no-null
+  const descRef = useRef<HTMLDivElement>(null);
+
+  const handleResize = useLastCallback(() => {
+    const descEl = descRef.current!;
+
+    setShowMoreBtn(descEl.scrollHeight! > descEl.clientHeight);
+  });
+
+  useResizeObserver(descRef, handleResize);
 
   const onBack = useCallback(() => {
     changeAiGramPage({ pageStatus: AiGramPageStatus.Index });
@@ -22,9 +53,9 @@ const EventDetail: FC<OwnProps & StateProps> = () => {
 
   return (
     <>
-      <div className="event-header">
+      <div className="event__header">
         <Button
-          className='event-header-btn'
+          className='event__header-back'
           round
           size="smaller"
           color="translucent"
@@ -34,27 +65,49 @@ const EventDetail: FC<OwnProps & StateProps> = () => {
           <i className="icon icon-arrow-left" />
         </Button>
       Claim Points
-        <Button
-          className='event-header-btn'
-          round
-          size="smaller"
-          color="translucent"
-          ariaLabel='back'
-        >
-        123
-          {/* <img className='sort-icon' src={SortIcon} alt='sort'/> */}
-        </Button>
+        <span className="event__header-btns">
+          <Button
+            className='icon-btn'
+            round
+            size="smaller"
+            color="translucent"
+            ariaLabel='back'
+          >
+            <img className='icon' src={XIcon} alt='sort'/>
+          </Button>
+          <Button
+            className='icon-btn'
+            round
+            size="smaller"
+            color="translucent"
+            ariaLabel='back'
+          >
+            <img className='icon' src={TelegramIcon} alt='sort'/>
+          </Button>
+        </span>
       </div>
 
-      <div className="event-detail">
-        <div className="event-header">
-          <img className="avatar" alt="avatar" />
-          <span className="nickname" />
+      <div className="event__content">
+        <div className="event__content-header">
+          <img className="avatar" alt="avatar" src={eventDetail.image} />
+          <span className="nickname">
+            {eventDetail.nickname}
+          </span>
+          {
+            eventDetail.isVerified && <img className="verify-icon" src={VerifiedIcon} alt="verify" />
+          }
         </div>
 
-        <div className="event-title" />
+        <div className="event__content-title">{eventDetail.title}</div>
 
-        <div className="event-content" />
+        <div className={buildClassName("event__content-desc", showMoreDesc && 'all')} ref={descRef}>
+          {eventDetail.desc}
+        </div>
+
+        { showMoreBtn && <span className="more-btn" onClick={() => {
+          setShowMoreDesc(true);
+          setShowMoreBtn(false);
+        }}>View More</span>}
 
         <div className="event-clicker-list" />
 

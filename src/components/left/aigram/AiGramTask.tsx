@@ -181,6 +181,8 @@ const AiGramTask: FC<StateProps> = ({
   }
 
   function renderContent() {
+    // return <EventDetail />;
+
     switch (pageStatus) {
       case AiGramPageStatus.ScoreDetail:
         return <AiGramScoreDetail />;
